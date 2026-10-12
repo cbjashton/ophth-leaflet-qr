@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-12T20:40",
+ "updated": "2026-10-12T22:00",
  "reportForm": "",
  "statsCode": "",
  "leaflets": [
@@ -16,7 +16,7 @@
    "title": "Accommodative esotropia (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/felf2012/accommodative-esotropia-information-for-parents.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -93,7 +93,7 @@
    "title": "Amblyopia (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/oa5lqq4x/amblyopia-information-for-parents_0.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -152,7 +152,7 @@
    "title": "Atropine treatment for amblyopia",
    "url": "https://moorfields.nhs.uk/mediaLocal/csznky3h/atropine-treatment-for-amblyopia.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "medicines"
   },
   {
@@ -236,7 +236,7 @@
    "title": "Botulinum toxin for facial symmetry after nerve palsy",
    "url": "https://moorfields.nhs.uk/mediaLocal/250hwrrh/botulinum-toxin-treatment-for-improving-facial-symmetry-after-facial-nerve-palsy.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery"
   },
   {
@@ -252,7 +252,7 @@
    "title": "Botulinum toxin for squint",
    "url": "https://moorfields.nhs.uk/mediaLocal/cclk5e0e/botulinum-toxin-treatment-for-squint.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery"
   },
   {
@@ -260,7 +260,7 @@
    "title": "Botulinum toxin for squint in children (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/zelhgxr0/botulinum-toxin-treatment-for-squint-in-children-for-parents.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery",
    "kids": true
   },
@@ -269,7 +269,7 @@
    "title": "Botulinum toxin for strabismus in pregnancy",
    "url": "https://moorfields.nhs.uk/mediaLocal/sbefggxl/botulinum-toxin-injections-for-strabismus-squint-in-pregnancy.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery"
   },
   {
@@ -277,7 +277,7 @@
    "title": "Botulinum toxin for synkinesis",
    "url": "https://moorfields.nhs.uk/mediaLocal/ykqe02js/botulinum-toxin-treatment-for-synkinesis-involuntary-facial-movement.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery"
   },
   {
@@ -301,7 +301,7 @@
    "title": "Brown syndrome (ages 8–12)",
    "url": "https://moorfields.nhs.uk/mediaLocal/l4ngxv0s/brown-syndrome-8-12.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -310,7 +310,7 @@
    "title": "Brown syndrome (teens and parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/osdl3gk4/brown-syndrome-teens-plus-parents.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -695,7 +695,7 @@
    "title": "Double vision and driving FAQs",
    "url": "https://moorfields.nhs.uk/mediaLocal/ixmfotsr/diplopia-double-vision-and-driving-faqs.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "visit"
   },
   {
@@ -712,7 +712,7 @@
    "title": "Duane's retraction syndrome (ages 8–12)",
    "url": "https://moorfields.nhs.uk/mediaLocal/cuqnfmbh/duane-retraction-syndrome-information-for-8-12-year-olds_1.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -721,7 +721,7 @@
    "title": "Duane's retraction syndrome (teens and parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/h5ngjp3y/duanes-retraction-syndrome-information-for-teens-parents_1.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -1076,7 +1076,7 @@
    "title": "Nystagmus (ages 8–12)",
    "url": "https://moorfields.nhs.uk/mediaLocal/xfibwpml/nystagmus-8-12.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -1085,7 +1085,7 @@
    "title": "Nystagmus (teens)",
    "url": "https://moorfields.nhs.uk/mediaLocal/sdudes4n/nystagmus-teens.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -1126,7 +1126,7 @@
    "title": "Patching for amblyopia (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/nqmjrvnx/patching-for-amblyopia-for-parents.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery",
    "kids": true
   },
@@ -1177,7 +1177,7 @@
    "title": "Pseudo squint (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/km3pqok5/pseudo-squint-for-parents.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -1298,7 +1298,7 @@
    "title": "Squint (ages 8–12)",
    "url": "https://moorfields.nhs.uk/mediaLocal/4nppfsgw/squint-8-12.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -1307,7 +1307,7 @@
    "title": "Squint (teens and parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/rjgd1bty/squint-teensplusparents.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "condition",
    "kids": true
   },
@@ -1316,7 +1316,7 @@
    "title": "Squint surgery (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/vbqjieou/surgery-for-squint-strabismus-for-parents.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery",
    "kids": true
   },
@@ -1325,7 +1325,7 @@
    "title": "Squint surgery in adults",
    "url": "https://moorfields.nhs.uk/mediaLocal/3lmnp34n/squint-surgery-in-adults.pdf",
    "source": "Moorfields",
-   "tag": "Paeds, strabismus & neuro",
+   "tag": "Strabismus & neuro",
    "kind": "surgery"
   },
   {
