@@ -42,6 +42,7 @@ header{align-items:center}
 .sharebtn svg{width:18px;height:18px}
 .disc{font-weight:700}
 .suggest{color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px;align-self:flex-start;padding-block:4px}
+.show .sharenote{margin:0;max-width:32ch;font-size:.95rem;color:#3c4a54}
 .show .steps{border:0;background:none;border-radius:0;overflow:visible;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;max-width:340px;width:100%;text-align:left;font-size:.95rem;color:#14212b}
 .show .steps li+li{border-top:1px solid #dbe3e8}
 .show .steps li{display:block;background:#f4f7f9;border:1px solid #dbe3e8;border-radius:10px;padding:10px 12px}
@@ -70,6 +71,20 @@ header{align-items:center}
 .panelhead{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .panelhead h3{margin:0;font-size:1.15rem}
 .panelhint{margin:2px 0 0;font-size:.85rem;color:var(--muted)}
+.getapp{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:10px 10px 10px 12px}
+.getapp img{width:40px;height:40px;border-radius:9px;flex:none}
+.gtxt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.gtxt b{font-size:.98rem}.gtxt span{font-size:.82rem;color:var(--muted)}
+.gbtn{flex:none;font-weight:700;font-size:.95rem;padding:10px 14px;border:0;border-radius:99px;background:var(--accent);color:var(--surface);cursor:pointer}
+.gx{flex:none;border:0;background:none;color:var(--muted);font-size:1rem;padding:6px;cursor:pointer}
+.isteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.isteps li{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+.isteps .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--surface);font-weight:700;display:grid;place-items:center}
+.isteps div{font-size:1rem;line-height:1.4}
+.isteps small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+.ios-share{width:22px;height:22px;vertical-align:-5px;color:var(--accent);margin:0 2px}
+.copybtn{width:100%;padding:13px;font-size:1rem;margin-top:12px}
+.imsg{margin:0;font-size:1rem}.imsg.small{font-size:.85rem;color:var(--muted)}
 .specdone{position:sticky;bottom:0;width:100%;padding:13px;font-size:1rem;box-shadow:0 -8px 16px var(--surface)}
 .specgrid .specopt{position:relative;padding-right:36px}
 .specopt[aria-pressed="true"]::after{content:"✓";position:absolute;top:9px;right:12px;font-weight:700}
@@ -168,6 +183,12 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 <body>
 <div class="wrap">
   <header><div><h1>Leaflet QR</h1><span class="count" id="count"></span></div><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button></header>
+  <div class="getapp" id="getApp" hidden>
+    <img src="icon-192.png" alt="" width="40" height="40">
+    <div class="gtxt"><b>Get the app</b><span>Add Leaflet QR to your home screen</span></div>
+    <button class="gbtn" id="getAppBtn">Install</button>
+    <button class="gx" id="getAppX" aria-label="Not now">✕</button>
+  </div>
   <button class="banner upd" id="updBar" hidden>A new version of the app is ready. Tap to update.</button>
   <div class="banner info" id="listBar" hidden>Leaflet list updated.</div>
   <div class="banner" id="offline" hidden>You're offline. Codes still work; the patient needs signal or Wi-Fi to open the leaflet.</div>
@@ -218,15 +239,39 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 </div>
 
 <div class="show" id="share" hidden>
-  <h2>Get Leaflet QR</h2>
+  <h2>Share Leaflet QR</h2>
   <div class="qr" id="shQr"></div>
-  <p class="hint">Scan with your phone camera, then add it to your home screen</p>
-  <ul class="steps">
-    <li><b>iPhone</b>Open in Safari, tap Share, then Add to Home Screen</li>
-    <li><b>Android</b>Open in Chrome, tap ⋮, then Install app</li>
-  </ul>
+  <p class="hint"><b>Ask your colleague to scan this with their phone camera.</b></p>
+  <p class="sharenote">Their phone opens the app and shows them how to add it to their home screen.</p>
   <p class="url" id="shUrl"></p>
   <div class="bar"><button class="btn primary" id="shClose">Done</button></div>
+</div>
+
+<div class="panel" id="installPanel" hidden>
+  <div class="panelcard" role="dialog" aria-modal="true" aria-labelledby="instTitle">
+    <div class="panelhead"><h3 id="instTitle">Add to your home screen</h3><button class="b2" id="instX" aria-label="Close">✕</button></div>
+    <ol class="isteps" id="instIos">
+      <li><span class="n">1</span><div>Tap the <b>Share</b> button <svg class="ios-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Share"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg> at the bottom of Safari<small>On some iPhones it's at the top, or behind <b>⋯</b></small></div></li>
+      <li><span class="n">2</span><div>Scroll down and tap <b>Add to Home Screen</b> <svg class="ios-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg></div></li>
+      <li><span class="n">3</span><div>Tap <b>Add</b>. The eye icon appears on your home screen</div></li>
+    </ol>
+    <div id="instOther" hidden>
+      <p class="imsg">To add it to your home screen, open this page in <b>Safari</b>.</p>
+      <ol class="isteps">
+        <li><span class="n">1</span><div>Tap <b>Copy link</b> below</div></li>
+        <li><span class="n">2</span><div>Open <b>Safari</b>, paste into the address bar and go</div></li>
+        <li><span class="n">3</span><div>Tap <b>Share</b> <svg class="ios-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Share"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>, then <b>Add to Home Screen</b></div></li>
+      </ol>
+      <button class="b2 primary copybtn" id="copyLink">Copy link</button>
+      <p class="imsg small" id="copyMsg" hidden></p>
+    </div>
+    <ol class="isteps" id="instAndroid" hidden>
+      <li><span class="n">1</span><div>Tap <b>⋮</b> at the top right of Chrome</div></li>
+      <li><span class="n">2</span><div>Tap <b>Install app</b> or <b>Add to Home screen</b></div></li>
+      <li><span class="n">3</span><div>Tap <b>Install</b>. The eye icon appears on your home screen</div></li>
+    </ol>
+    <p class="imsg small">After that, open it from the icon. It works without signal.</p>
+  </div>
 </div>
 
 <div class="panel" id="specPanel" hidden>
@@ -2853,6 +2898,38 @@ function trackOpen(){if(!shared.statsCode)return;
   let standalone=false;try{standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){}
   if(standalone&&!load("installSent",false)){save("installSent",true);track("app-installed","App installed")}
 const d=new Date().toISOString().slice(0,10);if(load("statday","")!==d){save("statday",d);track("app-opened","App opened")}}
+
+/* ---------- getting the app onto a colleague's phone ----------
+   Shown only when the app is opened in a browser rather than from the home screen. */
+let installEvt=null;
+const UA=navigator.userAgent||"";
+const isIOS=/iPhone|iPad|iPod/.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const isIOSSafari=isIOS&&/Safari/.test(UA)&&!/CriOS|FxiOS|EdgiOS|OPiOS|GSA|FBAN|FBAV|Instagram|Line|WhatsApp/.test(UA);
+const isAndroid=/Android/.test(UA);
+function standalone(){try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}}
+function showGetApp(){
+  if(standalone()||load("getAppHidden",false)||!(isIOS||isAndroid)){$("getApp").hidden=true;return}
+  $("getApp").hidden=false;
+  $("getAppBtn").textContent=installEvt?"Install":"How?";
+}
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;showGetApp()});
+addEventListener("appinstalled",()=>{installEvt=null;$("getApp").hidden=true;$("installPanel").hidden=true});
+$("getAppBtn").onclick=async()=>{
+  if(installEvt){let ok=false;try{installEvt.prompt();const r=await installEvt.userChoice;ok=!!(r&&r.outcome==="accepted")}catch(e){}installEvt=null;if(ok){save("getAppHidden",true);$("getApp").hidden=true}else showGetApp();return}
+  $("instIos").hidden=!isIOSSafari;$("instOther").hidden=!(isIOS&&!isIOSSafari);$("instAndroid").hidden=isIOS;
+  $("installPanel").hidden=false;$("instX").focus();
+};
+$("getAppX").onclick=()=>{save("getAppHidden",true);$("getApp").hidden=true};
+$("instX").onclick=()=>{$("installPanel").hidden=true};
+$("installPanel").addEventListener("click",e=>{if(e.target.id==="installPanel")$("installPanel").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("installPanel").hidden)$("installPanel").hidden=true});
+$("copyLink").onclick=async()=>{
+  const u=new URL("./",location.href).href,m=$("copyMsg");
+  try{await navigator.clipboard.writeText(u);m.textContent="Link copied. Now open Safari and paste it."}
+  catch(e){m.textContent="Copy this link: "+u}
+  m.hidden=false;
+};
+showGetApp();
 
 /* ---------- share the app with a colleague ---------- */
 function appUrl(){return new URL("./",location.href).href}
