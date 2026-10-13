@@ -32,13 +32,11 @@ The QR codes always send patients to the official Moorfields address, never to t
 
 A leaflet viewed once is saved on the phone and can be viewed again offline. The PDF viewer is PDF.js 5.7.284 (Mozilla, Apache 2.0 licence, in the `pdfjs` folder). Check for security updates to PDF.js a couple of times a year.
 
-## Reporting technical issues
+## Feedback
 
-A small **Report a technical issue** link at the bottom of the home screen opens a form, so staff can tell you when the app itself isn't working. It stays hidden until a form is added.
+A **Feedback** link at the bottom of the home screen opens a Google Form where staff can report a problem or suggest an improvement. Google emails you each new response (Responses tab → ⋮ → Get email notifications for new responses).
 
-1. Create a Microsoft Form on your trust account titled *Report a technical issue with Leaflet QR*, with a single long-text question, *Describe the issue*, and this help text under it: *What happened, and what were you doing at the time? Please don't include any patient details.*
-2. Turn on email notifications for new responses. In Microsoft Forms this is under **Responses** → **…** → **Get email notification of each response**; the menu may change.
-3. Paste the form's share link into `leaflets.json` as `"reportForm": "…"` and commit.
+The form's link is stored in `leaflets.json` as `"reportForm"`. To use a different form, replace that link; to hide the link, set it to `""`.
 
 ## Usage counts (optional, off by default)
 

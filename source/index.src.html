@@ -37,11 +37,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 header{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 h1{font-size:1.55rem;margin:0;letter-spacing:-.01em}
 .count{font:500 .78rem var(--mono);color:var(--muted)}
-header{align-items:center}
+header{align-items:flex-start}
 .sharebtn{display:flex;align-items:center;gap:6px;font-weight:700;font-size:.88rem;padding:9px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--accent);cursor:pointer;flex:none}
 .sharebtn svg{width:18px;height:18px}
 .disc{font-weight:700}
-.suggest{color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px;align-self:flex-start;padding-block:4px}
+.hdright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.suggest{display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:none;padding:4px 6px}
+.suggest svg{width:16px;height:16px}
+.suggest:active{opacity:.6}
 .show .sharenote{margin:0;max-width:32ch;font-size:.95rem;color:#3c4a54}
 .show .steps{border:0;background:none;border-radius:0;overflow:visible;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;max-width:340px;width:100%;text-align:left;font-size:.95rem;color:#14212b}
 .show .steps li+li{border-top:1px solid #dbe3e8}
@@ -182,7 +185,8 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 </head>
 <body>
 <div class="wrap">
-  <header><div><h1>Leaflet QR</h1><span class="count" id="count"></span></div><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button></header>
+  <header><div><h1>Leaflet QR</h1><span class="count" id="count"></span></div><div class="hdright"><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button>
+    <a class="suggest" id="suggest" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-4 3.5V16H4z"/></svg>Feedback</a></div></header>
   <div class="getapp" id="getApp" hidden>
     <img src="icon-192.png" alt="" width="40" height="40">
     <div class="gtxt"><b>Get the app</b><span>Add Leaflet QR to your home screen</span></div>
@@ -211,7 +215,6 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   <ul id="list"></ul>
   <div class="foot">
     <span>Press and hold a leaflet to preview its front page.</span>
-    <a class="suggest" id="suggest" target="_blank" rel="noopener" hidden>Report a technical issue</a>
     <span id="ver"></span>
     <span class="disc">Independent staff tool, not an official Moorfields Eye Hospital app.</span>
     <span>Leaflets link to Moorfields Eye Hospital public pages. Favourites and your own leaflets are saved on this phone only.</span>
@@ -579,7 +582,7 @@ function closeViewer(){vwJob++;$("vw").hidden=true;$("vwBody").innerHTML=""}
 $("vwClose").onclick=closeViewer;
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("vw").hidden){e.stopImmediatePropagation();closeViewer()}},true);
 
-/* ---------- technical problems: "reportForm" in leaflets.json is the form's link; empty hides the link ---------- */
+/* ---------- feedback: "reportForm" in leaflets.json is the feedback form's link; empty hides the link ---------- */
 function feedbackLinks(){const u=shared.reportForm;$("suggest").hidden=!u;if(u)$("suggest").href=u}
 
 /* ---------- anonymous usage counts (settings in leaflets.json) ----------
