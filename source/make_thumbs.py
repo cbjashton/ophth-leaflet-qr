@@ -24,6 +24,11 @@ INDEX = os.path.join(OUT, "index.json")
 SAVE_PDF_COPIES = False   # copies of each PDF, for viewing inside the app
 SAVE_FRONT_PAGES = False  # small front-page pictures for press-and-hold previews
 PDFS = os.path.join(ROOT, "pdfs")
+# Leaflets the check skips: checked by hand and fine for patients, but the website
+# doesn't answer the GitHub checker properly. Add an id here to stop false alerts.
+SKIP_CHECK = {
+    "m-vitreoretinal-emergency-vre-waiting-list-information",  # opens the clinic web page (checked 15 Oct 2026)
+}
 UA = {"User-Agent": "Mozilla/5.0 (Leaflet QR thumbnail builder)"}
 
 
@@ -61,6 +66,8 @@ def main():
     old = json.load(open(INDEX)) if os.path.exists(INDEX) else {}
     index, problems, pages = {}, [], {}
     for item in data["leaflets"]:
+        if item["id"] in SKIP_CHECK:
+            continue
         url, lid = item["url"], item["id"]
         try:
             status, ctype, body = fetch(url)
@@ -121,7 +128,7 @@ def main():
         open(flag, "w").write(str(len(problems)))
     elif os.path.exists(flag):
         os.remove(flag)
-    print(f"checked {len(data['leaflets'])} links: {len(problems)} problem(s)")
+    print(f"checked {len(data['leaflets']) - len(SKIP_CHECK)} links (skipped {len(SKIP_CHECK)}): {len(problems)} problem(s)")
 
 
 if __name__ == "__main__":
