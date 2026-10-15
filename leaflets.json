@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-13T09:20",
+ "updated": "2026-10-15T14:20",
  "reportForm": "https://docs.google.com/forms/d/e/1FAIpQLSdy74oCyTdTcrciLxiLcnBZl1DAJhVLKAdyo1Hg9S5BXrzHVA/viewform",
  "statsCode": "",
  "leaflets": [
@@ -158,7 +158,7 @@
   {
    "id": "m-paediatric-advice-leaflet-to-pre-op-families",
    "title": "Before your child's operation (pre-op advice)",
-   "url": "https://moorfields.nhs.uk/mediaLocal/5efhkn5y/paediatric-advice-leaflet-to-pre-op-families-final.pdf",
+   "url": "https://moorfields.nhs.uk/mediaLocal/5efhkn5y/paediatric-advice-leaflet-to-pre-op-families-final-1.pdf",
    "source": "Moorfields",
    "tag": "Before & after surgery",
    "kind": "visit",
@@ -431,14 +431,6 @@
    "kids": true
   },
   {
-   "id": "m-ciclosporin-eye-preparations-fact-sheet",
-   "title": "Ciclosporin eye preparations fact sheet",
-   "url": "https://moorfields.nhs.uk/mediaLocal/4vsbg1kh/ciclosporin-eye-preparations-fact-sheet-v20.pdf",
-   "source": "Moorfields",
-   "tag": "Cornea",
-   "kind": "medicines"
-  },
-  {
    "id": "m-clostridium-difficile",
    "title": "Clostridium difficile",
    "url": "https://moorfields.nhs.uk/mediaLocal/2f3cvvls/clostridium-difficile_0.pdf",
@@ -497,7 +489,7 @@
   {
    "id": "m-compliance-aids-eyguide",
    "title": "Compliance aid eyGuide",
-   "url": "https://moorfields.nhs.uk/mediaLocal/nwznn4i0/compliance-aids-step-by-step-guides-eyguide.pdf",
+   "url": "https://moorfields.nhs.uk/mediaLocal/nwznn4i0/compliance-aids-step-by-step-guides-eyguide-1.pdf",
    "source": "Moorfields",
    "tag": "Other",
    "kind": "medicines"
@@ -753,7 +745,7 @@
   {
    "id": "m-entropion",
    "title": "Entropion",
-   "url": "https://moorfields.nhs.uk/mediaLocal/vd2pehah/entropion.pdf",
+   "url": "https://moorfields.nhs.uk/mediaLocal/vd2pehah/entropion-1.pdf",
    "source": "Moorfields",
    "tag": "Oculoplastics",
    "kind": "condition"
@@ -1049,7 +1041,7 @@
   {
    "id": "m-my-hospital-passport-er",
    "title": "My hospital passport",
-   "url": "https://moorfields.nhs.uk/mediaLocal/b1geaob4/my-hospital-passport-v04.pdf",
+   "url": "https://www.moorfields.nhs.uk/mediaLocal/b1geaob4/my-hospital-passport-v05.pdf",
    "source": "Moorfields",
    "tag": "Other",
    "kind": "visit",
@@ -1456,7 +1448,7 @@
   {
    "id": "m-vitreoretinal-emergency-vre-waiting-list-information",
    "title": "Vitreoretinal emergency (VRE) waiting list information",
-   "url": "https://moorfields.nhs.uk/mediaLocal/or3gohmw/vre-emergency-waiting-list.pdf",
+   "url": "https://www.moorfields.nhs.uk/mediaLocal/or3gohmw/vre-emergency-waiting-list.pdf",
    "source": "Moorfields",
    "tag": "Vitreoretinal",
    "kind": "visit"

@@ -1,4 +1,4 @@
-name: Leaflet front pages and link check
+name: Weekly leaflet link check
 
 on:
   push:
@@ -12,23 +12,24 @@ permissions:
   issues: write
 
 jobs:
-  thumbs:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - run: pip install pillow
-      - run: python3 source/make_thumbs.py
-      - name: Save changes
+      - name: Check every leaflet link
+        run: python3 source/make_thumbs.py
+      - name: Save the link report
         run: |
           git config user.name "leaflet-qr-bot"
           git config user.email "leaflet-qr-bot@users.noreply.github.com"
-          git add -A thumbs link-report.md
-          if [ -d pdfs ]; then git add -A pdfs; fi
-          git diff --cached --quiet || (git commit -m "Update leaflet front pages and link report" && git push)
+          git add -A link-report.md
+          for d in thumbs pdfs; do if [ -e "$d" ] || git ls-files --error-unmatch "$d" >/dev/null 2>&1; then git add -A "$d"; fi; done
+          git diff --cached --quiet || (git commit -m "Update leaflet link report" && git push)
       # Broken links: open an issue (GitHub emails the repository owner), or add to the open one.
       # When every link works again, the issue closes itself.
-      - name: Alert on broken links
+      - name: Email me if links are broken
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

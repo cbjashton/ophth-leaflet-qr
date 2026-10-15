@@ -2,7 +2,7 @@
 
 A phone app for eye clinic staff. Tap a condition or procedure and it shows a QR code; the patient scans it with their phone camera to open the patient information leaflet. 
 
-- 184 leaflets from Moorfields Eye Hospital (public pages, as of 9 October 2026)
+- 183 leaflets from Moorfields Eye Hospital (public pages, as of 9 October 2026)
 - Works offline once installed. The patient's phone still needs signal or Wi-Fi to open the leaflet.
 - Favourites, most-used and staff's own extra leaflets are saved on each phone. Nothing is sent anywhere.
 - No accounts, no patient data.
@@ -15,26 +15,21 @@ A phone app for eye clinic staff. Tap a condition or procedure and it shows a QR
 4. Go to **Settings** → **Pages**. Under **Branch**, choose **main** and **/ (root)**, then **Save**.
 5. After a minute or two the page shows your address, for example `https://yourname.github.io/leaflet-qr/`.
 
-## Viewing leaflets in the app, front-page previews and link checks
+## Weekly link check
 
-**View leaflet** shows the whole leaflet inside the app, and pressing and holding a leaflet shows a small picture of its front page. For both, the site keeps its own copy of each Moorfields PDF and a picture of its front page. A GitHub job makes these and checks every link at the same time:
+A GitHub job checks every leaflet link each Monday morning, and whenever `leaflets.json` changes. It's already set up in this repository at `.github/workflows/link-check.yml` (a copy is in `source/thumbnails.yml`). To run it straight away: **Actions** tab → **Weekly leaflet link check** → **Run workflow**.
 
-1. In your repository, click **Add file** → **Create new file**.
-2. Name it `.github/workflows/thumbnails.yml` (typing the slashes creates the folders).
-3. Paste in the contents of `source/thumbnails.yml` and click **Commit changes**.
-4. Click the **Actions** tab → **Leaflet front pages and link check** → **Run workflow**.
-
-After a few minutes `thumbs` and `pdfs` folders appear, plus `link-report.md` listing any leaflet links that no longer work. It runs again every Monday and whenever `leaflets.json` changes, so the copies stay current.
+Each run updates `link-report.md` with any leaflets that no longer open.
 
 **Broken-link alerts.** If any link fails, the job opens an issue called *Leaflet links need checking* in the repository, and GitHub emails you about it (make sure email notifications are on in your GitHub settings). Each week it adds the latest report to that issue until the links are fixed, then closes it automatically.
 
-The QR codes always send patients to the official Moorfields address, never to these copies. Because the repository is public, the copies can be seen by anyone who finds the site, so check with Moorfields' patient information team that they're happy with this. To stop keeping copies, set `SAVE_PDF_COPIES = False` in `source/make_thumbs.py`; **View leaflet** will then offer to open the leaflet in the browser instead.
+The check only tests links. It doesn't keep copies of the Moorfields PDFs or pictures of their front pages, so **View leaflet** opens the leaflet from Moorfields, and press-and-hold previews show no picture. If Moorfields' patient information team later agree to copies being hosted (the repository is public, so anyone could find them), set `SAVE_PDF_COPIES` and `SAVE_FRONT_PAGES` to `True` in `source/make_thumbs.py`. The QR codes always send patients to the official Moorfields address either way.
 
 A leaflet viewed once is saved on the phone and can be viewed again offline. The PDF viewer is PDF.js 5.7.284 (Mozilla, Apache 2.0 licence, in the `pdfjs` folder). Check for security updates to PDF.js a couple of times a year.
 
 ## Feedback
 
-A **Feedback** link at the bottom of the home screen opens a Google Form where staff can report a problem or suggest an improvement. Google emails you each new response (Responses tab → ⋮ → Get email notifications for new responses).
+A small **Feedback** link at the top of the home screen opens a Google Form where staff can report a problem or suggest an improvement. Google emails you each new response (Responses tab → ⋮ → Get email notifications for new responses).
 
 The form's link is stored in `leaflets.json` as `"reportForm"`. To use a different form, replace that link; to hide the link, set it to `""`.
 
@@ -51,7 +46,7 @@ Nothing else is sent: no names, no patient details, no device identifiers. Count
 
 To switch it on: create a site at goatcounter.com, then put its code (the `xxx` in `xxx.goatcounter.com`) into `leaflets.json` as `"statsCode": "xxx"`. Agree this with governance first and tell staff it's on; it's still worth noting in the DPIA screening even though no personal data is collected.
 
-**Paper saved:** the weekly job writes `thumbs/pages.json` with the page count of each PDF. Multiply each leaflet's "code shown" count by its pages for pages not printed.
+**Paper saved:** with `SAVE_FRONT_PAGES` on, the weekly job writes `thumbs/pages.json` with the page count of each PDF. Multiply each leaflet's "code shown" count by its pages for pages not printed.
 
 ## Install on a phone
 
@@ -94,4 +89,4 @@ Edit `index.src.html`, then run `python3 build.py path/to/qrcode.js` to rebuild 
 ## Before rolling out to all staff
 
 - Check with your patient information team that these are the leaflets they want used, and with IT or information governance about hosting. The app holds no patient data.
-- Trusts move and update leaflets. Re-check links every few months; tap **Open** on any card to check one quickly.
+- Trusts move and update leaflets. The weekly link check emails you when one stops working; tap **Open** on any card to check one quickly.

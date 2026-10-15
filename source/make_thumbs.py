@@ -1,4 +1,7 @@
-"""Makes a small picture of each PDF leaflet's front page, and checks every link.
+"""Checks every leaflet link each week. Can also make front-page pictures and PDF copies.
+
+Currently set to CHECK LINKS ONLY (both switches below are False). Turn SAVE_FRONT_PAGES
+and/or SAVE_PDF_COPIES on later if Moorfields agrees to copies being hosted.
 
 Runs on GitHub (see .github/workflows/thumbnails.yml), which can reach the
 Moorfields website. Writes:
@@ -17,9 +20,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE) if os.path.basename(HERE) == "source" else HERE
 LIST = os.path.join(ROOT, "leaflets.json")
 OUT = os.path.join(ROOT, "thumbs")
-os.makedirs(OUT, exist_ok=True)
 INDEX = os.path.join(OUT, "index.json")
-SAVE_PDF_COPIES = True
+SAVE_PDF_COPIES = False   # copies of each PDF, for viewing inside the app
+SAVE_FRONT_PAGES = False  # small front-page pictures for press-and-hold previews
 PDFS = os.path.join(ROOT, "pdfs")
 UA = {"User-Agent": "Mozilla/5.0 (Leaflet QR thumbnail builder)"}
 
@@ -71,6 +74,8 @@ def main():
             problems.append((item["title"], url, "did not return a PDF"))
             continue
         digest = hashlib.sha1(body).hexdigest()
+        if not (SAVE_FRONT_PAGES or SAVE_PDF_COPIES):
+            continue  # links only: the PDF opened, nothing to save
         try:
             n = page_count(body)
             if n:
@@ -80,6 +85,9 @@ def main():
         if SAVE_PDF_COPIES:
             os.makedirs(PDFS, exist_ok=True)
             open(os.path.join(PDFS, lid + ".pdf"), "wb").write(body)
+        if not SAVE_FRONT_PAGES:
+            continue
+        os.makedirs(OUT, exist_ok=True)
         dest = os.path.join(OUT, lid + ".webp")
         if old.get(lid) == digest and os.path.exists(dest):
             index[lid] = digest
@@ -90,15 +98,17 @@ def main():
         except Exception as e:  # noqa: BLE001
             problems.append((item["title"], url, "could not draw front page: " + str(e)[:80]))
     # remove pictures for leaflets that are no longer listed
-    for f in os.listdir(OUT):
-        if f.endswith(".webp") and f[:-5] not in index:
-            os.remove(os.path.join(OUT, f))
+    if os.path.isdir(OUT):
+        for f in os.listdir(OUT):
+            if f.endswith(".webp") and (not SAVE_FRONT_PAGES or f[:-5] not in index):
+                os.remove(os.path.join(OUT, f))
     if os.path.isdir(PDFS):
         for f in os.listdir(PDFS):
-            if f.endswith(".pdf") and (not SAVE_PDF_COPIES or f[:-4] not in index):
+            if f.endswith(".pdf") and (not SAVE_PDF_COPIES or f[:-4] not in index and f[:-4] not in pages):
                 os.remove(os.path.join(PDFS, f))
-    json.dump(index, open(INDEX, "w"), indent=0, sort_keys=True)
-    json.dump(pages, open(os.path.join(OUT, "pages.json"), "w"), indent=0, sort_keys=True)
+    if SAVE_FRONT_PAGES:
+        json.dump(index, open(INDEX, "w"), indent=0, sort_keys=True)
+        json.dump(pages, open(os.path.join(OUT, "pages.json"), "w"), indent=0, sort_keys=True)
     with open(os.path.join(ROOT, "link-report.md"), "w", encoding="utf-8") as r:
         if problems:
             r.write("# Leaflet links that need checking\n\n")
@@ -111,7 +121,7 @@ def main():
         open(flag, "w").write(str(len(problems)))
     elif os.path.exists(flag):
         os.remove(flag)
-    print(f"{len(index)} front pages, {len(problems)} problem links")
+    print(f"checked {len(data['leaflets'])} links: {len(problems)} problem(s)")
 
 
 if __name__ == "__main__":
