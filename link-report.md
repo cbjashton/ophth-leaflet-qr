@@ -1,4 +1,3 @@
-# Leaflet links that need checking
+# Leaflet links
 
-- **Vitreoretinal emergency (VRE) waiting list information**: HTTP Error 404: Not Found
-  https://www.moorfields.nhs.uk/mediaLocal/or3gohmw/vre-emergency-waiting-list.pdf
+All links worked on the last check.
