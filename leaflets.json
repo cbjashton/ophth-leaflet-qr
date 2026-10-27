@@ -1,7 +1,13 @@
 {
- "updated": "2026-10-15T14:20",
+ "updated": "2026-10-27T21:30",
  "reportForm": "https://docs.google.com/forms/d/e/1FAIpQLSdy74oCyTdTcrciLxiLcnBZl1DAJhVLKAdyo1Hg9S5BXrzHVA/viewform",
  "statsCode": "",
+ "pilot": {
+  "roles": ["Consultant", "Resident doctor", "Nurse", "Optometrist", "Orthoptist", "Healthcare assistant", "Pharmacist", "Other"],
+  "areas": ["Accident & Emergency", "Cornea & external eye", "Paediatrics", "Cataract", "Glaucoma", "Medical retina", "Vitreoretinal", "Oculoplastics", "Strabismus & neuro", "Uveitis", "Other"],
+  "sites": [],
+  "surveyForm": ""
+ },
  "leaflets": [
   {
    "id": "m-acanthamoeba-keratitis-ak",

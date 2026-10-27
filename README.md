@@ -33,20 +33,28 @@ A small **Feedback** link at the top of the home screen opens a Google Form wher
 
 The form's link is stored in `leaflets.json` as `"reportForm"`. To use a different form, replace that link; to hide the link, set it to `""`.
 
-## Usage counts (optional, off by default)
+## Pilot data (off until the pilot starts)
 
-For a quality improvement project, the app can send anonymous counts to GoatCounter, a free, cookie-free statistics service:
+Everything that collects data is in `pilot.js`. Nothing is sent, and staff aren't asked anything, until a GoatCounter code is added.
 
-- once per phone: the app was installed (counted the first time it opens from the home screen)
-- once a day per phone: the app was opened (how many people use it)
-- each time a code is shown, and for which leaflet
-- each time the app is shared
+**Switching it on.** Create a free site at goatcounter.com (cookie-free, no personal data). Put its code (the `xxx` in `xxx.goatcounter.com`) into `leaflets.json` as `"statsCode": "xxx"`. Phones pick this up the next time they open the app with signal. Agree it with information governance first and tell staff it's on.
 
-Nothing else is sent: no names, no patient details, no device identifiers. Counts made offline are sent when the phone next has signal. It counts codes **shown**, not codes **scanned**; a short patient survey gives the proportion actually opened.
+**What staff see.** The first time the app opens with the pilot on, it asks for their role and the area they mainly work in. They can change this later from the link at the bottom of the home screen, which also says what is recorded. The lists are in `leaflets.json` under `"pilot"`:
 
-To switch it on: create a site at goatcounter.com, then put its code (the `xxx` in `xxx.goatcounter.com`) into `leaflets.json` as `"statsCode": "xxx"`. Agree this with governance first and tell staff it's on; it's still worth noting in the DPIA screening even though no personal data is collected.
+- `"roles"` and `"areas"`: edit freely. Changing a label starts a new group in the report.
+- `"sites"`: leave empty for the single-site pilot. Add sites (e.g. `["City Road", "St George's", "Croydon"]`) when it spreads and staff are asked for their site too.
+- `"surveyForm"`: link to a form where staff can leave their NHS email for pilot surveys. Emails go to that form only, never into the app's counts.
 
-**Paper saved:** with `SAVE_FRONT_PAGES` on, the weekly job writes `thumbs/pages.json` with the page count of each PDF. Multiply each leaflet's "code shown" count by its pages for pages not printed.
+**What is counted** (each with role, area, local date and time, whether the phone had signal, and a random code for the phone):
+installed to home screen; app opened (or returned to after 15 minutes); role and area chosen; QR code shown (which leaflet); code shown from "Also consider"; leaflet viewed on the staff phone; search that found nothing (the words typed are never sent); favourite added; app shared; feedback form opened. GoatCounter adds browser, phone system, screen size and country.
+
+**Never recorded:** names, email addresses, search words, or anything about patients. The random phone code lets the report count active phones and returning users without knowing whose phone it is; mention it in the DPIA screening.
+
+**Counts made with no signal** wait on the phone and are sent later with the time they happened.
+
+**Reports.** In GoatCounter: Settings → Export → Start export; GoatCounter emails a CSV. Then run `python3 source/pilot_report.py export.csv` for `pilot-report.html` (summary, by week with returning phones, by role, by area, by hour and weekday, most-used and never-used leaflets, phone systems) and `pilot-events.csv` (one row per count, for Excel). Keep exports off GitHub: the repository is public. Both report files are ignored by git.
+
+**Not collected by the app** (needs separate steps in the pilot): whether patients actually scanned the code, patient views, paper use before the pilot, and staff time. It counts codes **shown**, not codes **scanned**.
 
 ## Install on a phone
 
@@ -84,7 +92,7 @@ Links work one way, so add a line for each leaflet that should show suggestions.
 
 ## Changing the app itself
 
-Edit `index.src.html`, then run `python3 build.py path/to/qrcode.js` to rebuild `index.html`. The QR library is `qrcode-generator` 1.4.4 from npm. Upload the new `index.html` and bump `VERSION` in `sw.js`. Staff then see *A new version of the app is ready. Tap to update.* the next time they open it.
+Edit `source/index.src.html`, then run `python3 source/build.py path/to/qrcode.js` to rebuild `index.html`. The QR library is `qrcode-generator` 1.4.4 from npm. Upload the new `index.html` and bump `VERSION` in `sw.js`. Staff then see *A new version of the app is ready. Tap to update.* the next time they open it.
 
 ## Before rolling out to all staff
 

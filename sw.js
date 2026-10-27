@@ -1,7 +1,7 @@
 // Leaflet QR offline support.
 // Bump VERSION whenever index.html changes so phones pick up the new app.
-const VERSION = "leaflet-qr-v30";
-const FILES = ["./", "index.html", "leaflets.json", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png", "pdfjs/pdfjs-5.min.js", "pdfjs/pdfjs-5.worker.min.js"];
+const VERSION = "leaflet-qr-v31";
+const FILES = ["./", "index.html", "pilot.js", "leaflets.json", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png", "pdfjs/pdfjs-5.min.js", "pdfjs/pdfjs-5.worker.min.js"];
 
 self.addEventListener("install", e => {
   e.waitUntil(

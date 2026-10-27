@@ -181,6 +181,23 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 .pvbar{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:8px}
 .pvbar .b2{padding-inline:8px;white-space:nowrap}
 @media (prefers-reduced-motion:no-preference){.sheet form{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+
+/* pilot sign-up sheet */
+.psheet{position:fixed;inset:0;z-index:40;background:rgba(10,18,24,.45);display:flex;align-items:flex-end;justify-content:center}
+.psheet .pcard{background:var(--surface);color:var(--fg);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.psheet h3{margin:0;font-size:1.2rem}
+.psheet .plead{margin:0;color:var(--muted);font-size:.92rem}
+.psheet .pq{font-weight:700;margin:0 0 6px}
+.pchips{display:flex;flex-wrap:wrap;gap:8px}
+.pchip{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:99px;padding:9px 14px;font-weight:600;font-size:.92rem;cursor:pointer;min-height:40px}
+.pchip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.psheet details{font-size:.88rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.psheet details summary{cursor:pointer;font-weight:700;color:var(--fg)}
+.psheet details ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.psheet .pbar{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.psheet .pbar a{margin-right:auto;color:var(--accent);font-weight:700;font-size:.9rem}
+.psheet button.b2[disabled]{opacity:.45;cursor:default}
+.foot a.plink{color:var(--accent);font-weight:700;text-decoration:none}
 </style>
 </head>
 <body>
@@ -218,6 +235,7 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
     <span id="ver"></span>
     <span class="disc">Independent staff tool, not an official Moorfields Eye Hospital app.</span>
     <span>Leaflets link to Moorfields Eye Hospital public pages. Favourites and your own leaflets are saved on this phone only.</span>
+    <a href="#" class="plink" id="pilotLink" hidden>Pilot: your role and what this app records</a>
   </div>
 </div>
 <div class="dock">
@@ -331,6 +349,32 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   </form>
 </div>
 
+<div class="psheet" id="pilotSheet" hidden>
+  <div class="pcard" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+    <h3 id="pTitle">Help us evaluate this app</h3>
+    <p class="plead">We're running a pilot. Tell us your role and where you mainly work, once, so we can see who finds the app useful.</p>
+    <div><p class="pq">Your role</p><div class="pchips" id="pRole" role="group"></div></div>
+    <div><p class="pq">Where you mainly work</p><div class="pchips" id="pArea" role="group"></div></div>
+    <div id="pSiteWrap" hidden><p class="pq">Your site</p><div class="pchips" id="pSite" role="group"></div></div>
+    <details>
+      <summary>What the app records</summary>
+      <ul>
+        <li>When the app is opened, and which leaflet codes are shown.</li>
+        <li>Your role and area (above), and a random code for this phone (<b id="pPhone"></b>) so we can count active phones.</li>
+        <li>Searches that find nothing are counted, but the words you type are never sent.</li>
+        <li>Never recorded: your name, email, or anything about patients.</li>
+      </ul>
+    </details>
+    <div class="pbar">
+      <a id="pSurvey" target="_blank" rel="noopener" hidden>Join the pilot survey list</a>
+      <button type="button" class="b2" id="pClose" hidden>Close</button>
+      <button type="button" class="b2 primary" id="pSave" disabled>Save</button>
+    </div>
+  </div>
+</div>
+
+<script>window.PILOT_STORE="lqr-pilot-";</script>
+<script src="pilot.js"></script>
 <script>
 /*__QRLIB__*/
 </script>
@@ -402,6 +446,8 @@ function rowEl(i,showUses){
   s.innerHTML=starIcon;s.onclick=()=>toggleFav(i.id);li.append(s);
   return li;
 }
+let missT=null,missSent="";
+function noHit(){const q=$("q").value.trim().toLowerCase();clearTimeout(missT);missT=setTimeout(()=>{if(q.length>=3&&q===$("q").value.trim().toLowerCase()&&q!==missSent){missSent=q;Pilot.ev("search")}},2500)}
 function render(){
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===tab));
   const list=all(), q=$("q").value.trim().toLowerCase();
@@ -421,6 +467,7 @@ function render(){
   $("allHead").textContent=words.length?"Results":"A–Z";
   const ul=$("list");ul.innerHTML="";ul.hidden=false;
   if(!pool.length){
+    if(words.length)noHit();
     const msg=words.length?"No leaflets match that search."
       :tab==="fav"&&!favs.size?"No favourites yet. Tap the star next to any leaflet to add it here."
       :specs.size?(specs.size===1?"No "+[...specs][0]+" leaflets in this tab.":"No leaflets for the chosen subspecialties in this tab.")
@@ -474,7 +521,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("specPanel").hid
 $("q").addEventListener("input",render);
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.k;save("tab",tab);render()});
 
-function toggleFav(id){favs.has(id)?favs.delete(id):favs.add(id);save("favs",[...favs]);render();if(!$("show").hidden)cardFav()}
+function toggleFav(id){favs.has(id)?favs.delete(id):(favs.add(id),Pilot.ev("fav",id));save("favs",[...favs]);render();if(!$("show").hidden)cardFav()}
 
 /* ---------- patient card ---------- */
 function qrSvg(text){
@@ -497,12 +544,12 @@ function showCard(i,count=true){
   const prev=trail[trail.length-1];
   const rel=relatedTo(i.id).filter(r=>!trail.some(t=>t.id===r.id)),box=$("sRelList");box.innerHTML="";
   rel.forEach(r=>{const b=el("button","relbtn");b.append(el("span",null,r.title));b.insertAdjacentHTML("beforeend",chev);
-    b.setAttribute("aria-label","Show code for "+r.title);b.onclick=()=>{trail.push(current);showCard(r);$("show").scrollTop=0};box.append(b)});
+    b.setAttribute("aria-label","Show code for "+r.title);b.onclick=()=>{Pilot.ev("related",r.id);trail.push(current);showCard(r);$("show").scrollTop=0};box.append(b)});
   if(prev){const b=el("button","relbtn prev");const t=el("span");t.append(el("span","prevtag","Previous"),document.createTextNode(prev.title));b.append(t);b.insertAdjacentHTML("beforeend",chev);
     b.setAttribute("aria-label","Go back to "+prev.title);b.onclick=()=>{trail.pop();showCard(prev,false);$("show").scrollTop=0};box.append(b)}
   $("sRel").hidden=!(rel.length||prev);
   cardFav();
-  if(count){uses[i.id]=(uses[i.id]||0)+1;save("uses",uses);track("code/"+i.id,"Code shown: "+i.title)}
+  if(count){uses[i.id]=(uses[i.id]||0)+1;save("uses",uses);Pilot.ev("code",i.id)}
 }
 function cardFav(){if(current)$("sFav").textContent=favs.has(current.id)?"★ Favourite":"☆ Favourite"}
 function hideCard(){$("show").hidden=true;try{wake?.release()}catch(e){}wake=null;current=null;trail=[];render()}
@@ -549,6 +596,7 @@ function pdfLib(){
 }
 function vmsg(text,i){const box=el("div","vmsg");box.append(el("p",null,text));const a=el("a",null,"Open in browser");a.href=i.url;a.target="_blank";a.rel="noopener";box.append(a);return box}
 async function openViewer(i){
+  Pilot.ev("view",i.id);
   const job=++vwJob,body=$("vwBody");
   $("vwTitle").textContent=i.title;$("vwExt").href=i.url;body.innerHTML="";body.append(el("div","vmsg","Loading…"));
   $("vw").hidden=false;$("vwClose").focus();
@@ -584,26 +632,10 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("vw").hidden){e.
 
 /* ---------- feedback: "reportForm" in leaflets.json is the feedback form's link; empty hides the link ---------- */
 function feedbackLinks(){const u=shared.reportForm;$("suggest").hidden=!u;if(u)$("suggest").href=u}
+$("suggest").addEventListener("click",()=>Pilot.ev("feedback"));
 
-/* ---------- anonymous usage counts (settings in leaflets.json) ----------
-   "statsCode": a GoatCounter site code. Empty means nothing is ever sent.
-   Counts only: app installed (once per phone), app opened (once a day per phone), which leaflet's code was shown, app shared.
-   No names, no patient details, no cookies. Counts made offline wait and are sent later. */
-function track(path,title){
-  if(!shared.statsCode)return;
-  const q=load("statq",[]);q.push([path,title]);save("statq",q.slice(-500));flushStats();
-}
-function flushStats(){
-  const code=shared.statsCode;if(!code||navigator.onLine===false)return;
-  const q=load("statq",[]);if(!q.length)return;save("statq",[]);
-  q.forEach(([p,t],n)=>setTimeout(()=>{const img=new Image();
-    img.src="https://"+encodeURIComponent(code)+".goatcounter.com/count?p="+encodeURIComponent(p)+"&t="+encodeURIComponent(t)+"&e=true&rnd="+Math.random().toString(36).slice(2)},n*150));
-}
-function trackOpen(){if(!shared.statsCode)return;
-  /* first time the app runs from the home screen: count one install for this phone */
-  let standalone=false;try{standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){}
-  if(standalone&&!load("installSent",false)){save("installSent",true);track("app-installed","App installed")}
-const d=new Date().toISOString().slice(0,10);if(load("statday","")!==d){save("statday",d);track("app-opened","App opened")}}
+/* ---------- pilot data: see pilot.js. Sends nothing unless "statsCode" is set in leaflets.json ---------- */
+function trackOpen(){Pilot.start(shared,render)}
 
 /* ---------- getting the app onto a colleague's phone ----------
    Shown only when the app is opened in a browser rather than from the home screen. */
@@ -640,7 +672,7 @@ showGetApp();
 /* ---------- share the app with a colleague ---------- */
 function appUrl(){return new URL("./",location.href).href}
 $("shareBtn").onclick=async()=>{
-  track("app-shared","App shared");
+  Pilot.ev("share");
   const u=appUrl();$("shUrl").textContent=u;
   try{$("shQr").innerHTML=qrSvg(u)}catch(e){$("shQr").textContent=u}
   $("share").hidden=false;$("shClose").focus();
@@ -689,7 +721,7 @@ $("fDel").onclick=()=>{
 
 /* ---------- offline ---------- */
 function net(){$("offline").hidden=navigator.onLine!==false}
-addEventListener("online",()=>{net();refresh();flushStats()});addEventListener("offline",net);net();
+addEventListener("online",()=>{net();refresh()});addEventListener("offline",net);net();
 /* app updates: a new version installs in the background; staff tap the bar to switch to it */
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
   try{
