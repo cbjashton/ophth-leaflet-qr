@@ -1,7 +1,19 @@
 {
- "updated": "2026-10-15T14:20",
+ "updated": "2026-10-27T21:30",
  "reportForm": "https://docs.google.com/forms/d/e/1FAIpQLSdy74oCyTdTcrciLxiLcnBZl1DAJhVLKAdyo1Hg9S5BXrzHVA/viewform",
  "statsCode": "",
+ "pilot": {
+  "roles": [
+   {"group": "Doctors", "roles": ["Consultant", "Fellow", "Resident doctor (specialty training)", "Resident doctor (foundation or core)", "Specialty or associate specialist doctor (SAS)"]},
+   {"group": "Nursing", "roles": ["Nurse", "Nurse practitioner or advanced nurse practitioner", "Clinical nurse specialist", "Healthcare assistant or clinical support worker"]},
+   {"group": "Allied health and science", "roles": ["Optometrist", "Orthoptist", "Ophthalmic technician or science practitioner", "Ophthalmic imaging or photography", "Pharmacist or pharmacy technician"]},
+   {"group": "Support and admin", "roles": ["Eye clinic liaison officer (ECLO)", "Admin, booking or reception"]},
+   {"group": "Other", "roles": ["Student", "Other"]}
+  ],
+  "areas": ["Accident & Emergency", "Cornea & external eye", "Paediatrics", "Cataract", "Glaucoma", "Medical retina", "Vitreoretinal", "Oculoplastics", "Strabismus & neuro", "Uveitis", "Other"],
+  "sites": [],
+  "surveyForm": ""
+ },
  "leaflets": [
   {
    "id": "m-acanthamoeba-keratitis-ak",

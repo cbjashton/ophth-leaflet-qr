@@ -1,0 +1,4 @@
+pilot-report.html
+pilot-events.csv
+*.export.csv
+__pycache__/

@@ -5,7 +5,7 @@
 // Leaflets) must use a prefix that does NOT start with "leaflet-qr-".
 const PREFIX = "leaflet-qr-";
 const VERSION = PREFIX + "v31";
-const FILES = ["./", "index.html", "leaflets.json", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png", "pdfjs/pdfjs-5.min.js", "pdfjs/pdfjs-5.worker.min.js"];
+const FILES = ["./", "index.html", "pilot.js", "leaflets.json", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png", "pdfjs/pdfjs-5.min.js", "pdfjs/pdfjs-5.worker.min.js"];
 const SCOPE = new URL("./", self.location).pathname;   // "/ophth-leaflet-qr/"
 
 // Look things up in this version's cache only, never in another app's.
