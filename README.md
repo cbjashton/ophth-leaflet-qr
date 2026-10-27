@@ -1,10 +1,10 @@
-# Leaflet QR
+# EyeLeaflets
 
 A phone app for eye clinic staff. Tap a condition or procedure and it shows a QR code; the patient scans it with their phone camera to open the patient information leaflet. 
 
 - 183 leaflets from Moorfields Eye Hospital (public pages, as of 9 October 2026)
 - Works offline once installed. The patient's phone still needs signal or Wi-Fi to open the leaflet.
-- Favourites, most-used and staff's own extra leaflets are saved on each phone. Nothing is sent anywhere.
+- Favourites and most-used leaflets are saved on each phone. Only the developer can add or change leaflets.
 - No accounts, no patient data.
 
 ## Put it online with GitHub Pages (about 10 minutes, free)
@@ -27,11 +27,19 @@ The check only tests links. It doesn't keep copies of the Moorfields PDFs or pic
 
 A leaflet viewed once is saved on the phone and can be viewed again offline. The PDF viewer is PDF.js 5.7.284 (Mozilla, Apache 2.0 licence, in the `pdfjs` folder). Check for security updates to PDF.js a couple of times a year.
 
-## Feedback
+## Feedback and help
 
-A small **Feedback** link at the top of the home screen opens a Google Form where staff can report a problem or suggest an improvement. Google emails you each new response (Responses tab → ⋮ → Get email notifications for new responses).
+A small **Feedback** button at the top of the home screen opens a menu:
 
-The form's link is stored in `leaflets.json` as `"reportForm"`. To use a different form, replace that link; to hide the link, set it to `""`.
+- **Request a leaflet**
+- **Report a leaflet problem**
+- **Something isn't working**
+- **General feedback or ideas**
+- **Help installing the app** (opens the install steps inside the app)
+
+The first four open the Google Form stored in `leaflets.json` as `"reportForm"`. Google emails you each new response (Responses tab → ⋮ → Get email notifications for new responses). Set `"reportForm"` to `""` to hide the button.
+
+To see which option someone chose, add a question to the form such as *What is this about?*, get a pre-filled link for it (⋮ → Get pre-filled link), and put its field name in `leaflets.json` as `"feedbackEntry": "entry.123456789"`. Each option then fills in its own label. To change the options, or send one to a different form, add a `"feedbackMenu"` list to `leaflets.json`, with `label`, `hint` and optionally `url` for each.
 
 ## Usage counts (optional, off by default)
 
@@ -84,7 +92,7 @@ Links work one way, so add a line for each leaflet that should show suggestions.
 
 ## Changing the app itself
 
-Edit `index.src.html`, then run `python3 build.py path/to/qrcode.js` to rebuild `index.html`. The QR library is `qrcode-generator` 1.4.4 from npm. Upload the new `index.html` and bump `VERSION` in `sw.js`. Staff then see *A new version of the app is ready. Tap to update.* the next time they open it.
+Edit `source/index.src.html`, then run `python3 source/build.py path/to/qrcode.js` to rebuild `index.html` in the main folder. The QR library is `qrcode-generator` 1.4.4 from npm. Upload the new `index.html` and bump `VERSION` in `sw.js`. Staff then see *A new version of the app is ready. Tap to update.* the next time they open it.
 
 ## Before rolling out to all staff
 

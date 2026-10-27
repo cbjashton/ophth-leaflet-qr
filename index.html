@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Leaflet QR</title>
+<title>EyeLeaflets</title>
 <meta name="description" content="Show patients a QR code for any eye patient information leaflet. Works offline.">
 <meta name="theme-color" content="#1f5f8b">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Leaflet QR">
+<meta name="apple-mobile-web-app-title" content="EyeLeaflets">
 <style>
 /* Layout: one-column phone list. Tabs by leaflet type, then favourites, most used, A–Z. A tapped row opens a full-screen white card for the patient to scan. */
 :root{
@@ -42,7 +42,7 @@ header{align-items:flex-start}
 .sharebtn svg{width:18px;height:18px}
 .disc{font-weight:700}
 .hdright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
-.suggest{display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:none;padding:4px 6px}
+.suggest{background:none;border:0;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:none;padding:4px 6px}
 .suggest svg{width:16px;height:16px}
 .suggest:active{opacity:.6}
 .show .sharenote{margin:0;max-width:32ch;font-size:.95rem;color:#3c4a54}
@@ -151,8 +151,16 @@ li+li{border-top:1px solid var(--line)}
 .btn:disabled{opacity:.35}
 /* Sheets */
 .sheet{position:fixed;inset:0;background:rgba(10,18,24,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
-.sheet form{background:var(--surface);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;max-height:90vh;overflow-y:auto}
+.sheet form,.sheet .sbox{background:var(--surface);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;max-height:90vh;overflow-y:auto}
 .sheet h3{margin:0;font-size:1.15rem}
+.sheet .help{margin:0;color:var(--muted);font-size:.88rem}
+.fbopts{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.fbopt{display:grid;gap:2px;text-align:left;padding:13px 40px 13px 14px;background:var(--surface);border:0;color:var(--fg);text-decoration:none;font:inherit;cursor:pointer;position:relative}
+.fbopt+.fbopt{border-top:1px solid var(--line)}
+.fbopt::after{content:"\203A";position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1.4rem}
+.fbopt b{font-size:1rem}
+.fbopt span{color:var(--muted);font-size:.84rem}
+.fbopt:active{background:var(--accent-soft)}
 label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.85rem}
 label input,label select,label textarea{font-weight:400;font-size:1rem;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .help{font-size:.82rem;color:var(--muted);margin:0}
@@ -180,16 +188,16 @@ label input,label select,label textarea{font-weight:400;font-size:1rem;padding:1
 a.b2{text-decoration:none;color:inherit;text-align:center}
 .pvbar{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:8px}
 .pvbar .b2{padding-inline:8px;white-space:nowrap}
-@media (prefers-reduced-motion:no-preference){.sheet form{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+@media (prefers-reduced-motion:no-preference){.sheet form,.sheet .sbox{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header><div><h1>Leaflet QR</h1><span class="count" id="count"></span></div><div class="hdright"><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button>
-    <a class="suggest" id="suggest" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-4 3.5V16H4z"/></svg>Feedback</a></div></header>
+  <header><div><h1>EyeLeaflets</h1><span class="count" id="count"></span></div><div class="hdright"><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button>
+    <button type="button" class="suggest" id="suggest" hidden aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-4 3.5V16H4z"/></svg>Feedback</button></div></header>
   <div class="getapp" id="getApp" hidden>
     <img src="icon-192.png" alt="" width="40" height="40">
-    <div class="gtxt"><b>Get the app</b><span>Add Leaflet QR to your home screen</span></div>
+    <div class="gtxt"><b>Get the app</b><span>Add EyeLeaflets to your home screen</span></div>
     <button class="gbtn" id="getAppBtn">Install</button>
     <button class="gx" id="getAppX" aria-label="Not now">✕</button>
   </div>
@@ -217,11 +225,8 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
     <span>Press and hold a leaflet to preview its front page.</span>
     <span id="ver"></span>
     <span class="disc">Independent staff tool, not an official Moorfields Eye Hospital app.</span>
-    <span>Leaflets link to Moorfields Eye Hospital public pages. Favourites and your own leaflets are saved on this phone only.</span>
+    <span>Leaflets link to Moorfields Eye Hospital public pages. Favourites are saved on this phone only.</span>
   </div>
-</div>
-<div class="dock">
-  <button class="fab primary" id="add">+ Add</button>
 </div>
 
 <div class="show" id="show" hidden>
@@ -235,14 +240,13 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   </div>
   <div class="bar">
     <button class="btn" id="sFav">☆ Favourite</button>
-    <button class="btn" id="sEdit" hidden>Edit</button>
     <button class="btn" id="sOpen">View leaflet</button>
     <button class="btn primary" id="sClose">Done</button>
   </div>
 </div>
 
 <div class="show" id="share" hidden>
-  <h2>Share Leaflet QR</h2>
+  <h2>Share EyeLeaflets</h2>
   <div class="qr" id="shQr"></div>
   <p class="hint"><b>Ask your colleague to scan this with their phone camera.</b></p>
   <p class="sharenote">Their phone opens the app and shows them how to add it to their home screen.</p>
@@ -308,27 +312,13 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   </div>
 </div>
 
-<div class="sheet" id="sheet" hidden>
-  <form id="form" novalidate>
-    <h3 id="fHead">Add your own leaflet</h3>
-    <div id="fMine">
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <label>Condition or procedure<input id="fTitle" placeholder="e.g. Dry eye"></label>
-        <label>Leaflet link<input id="fUrl" type="url" inputmode="url" placeholder="https://…"></label>
-        <label>Type<select id="fKind"><option value="condition">Condition</option><option value="surgery">Surgery or treatment</option><option value="medicines">Drops, lenses or medicines</option><option value="visit">Tests and hospital visits</option></select></label>
-        <label>Subspecialty<select id="fTag"></select></label>
-      </div>
-    </div>
-    <p class="help" id="fHelp">Your own leaflets stay on this phone. To add one for all staff, ask whoever looks after the shared list.</p>
-    <p class="err" id="fErr" hidden></p>
-    <div class="actions">
-      <button type="button" class="b2 danger" id="fDel" hidden>Delete</button>
-      <div class="right">
-        <button type="button" class="b2" id="fCancel">Cancel</button>
-        <button type="submit" class="b2 primary" id="fSave">Save</button>
-      </div>
-    </div>
-  </form>
+<div class="sheet" id="fbSheet" hidden role="dialog" aria-modal="true" aria-labelledby="fbHead">
+  <div class="sbox">
+    <h3 id="fbHead">Feedback and help</h3>
+    <p class="help">Messages go to the app's developer. Please don't include any patient details.</p>
+    <div class="fbopts" id="fbOpts"></div>
+    <button type="button" class="b2" id="fbClose">Close</button>
+  </div>
 </div>
 
 <script>
@@ -2644,7 +2634,7 @@ const $=id=>document.getElementById(id);
 function load(k,d){try{const v=localStorage.getItem("lqr-"+k);return v?JSON.parse(v):d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem("lqr-"+k,JSON.stringify(v))}catch(e){}}
 let shared=load("shared",null); if(!shared||(shared.updated||"")<BUNDLED.updated) shared=BUNDLED;
-let mine=load("mine",[]).map(m=>OLD_TAGS[m.tag]?{...m,tag:OLD_TAGS[m.tag]}:m), favs=new Set(load("favs",[])), uses=load("uses",{});
+let mine=[] /* staff can no longer add their own leaflets */, favs=new Set(load("favs",[])), uses=load("uses",{});
 let tab=load("tab","all"); if(tab==="fav"&&!load("favs",[]).length) tab="all";
 let specs=new Set(); /* chosen subspecialties; empty means all */
 let current=null, trail=[], editing=null, confirmDel=false, wake=null;
@@ -2789,7 +2779,6 @@ function showCard(i,count=true){
   current=i;
   $("sTitle").textContent=i.title;$("sUrl").textContent=i.url;$("sOpen").onclick=()=>openViewer(i);
   try{$("sQr").innerHTML=qrSvg(i.url)}catch(e){$("sQr").textContent="This link is too long to make a code."}
-  $("sEdit").hidden=!i.mine;
   /* related leaflets, then the leaflet you came from at the bottom so you can go back */
   const prev=trail[trail.length-1];
   const rel=relatedTo(i.id).filter(r=>!trail.some(t=>t.id===r.id)),box=$("sRelList");box.innerHTML="";
@@ -2805,9 +2794,8 @@ function cardFav(){if(current)$("sFav").textContent=favs.has(current.id)?"★ Fa
 function hideCard(){$("show").hidden=true;try{wake?.release()}catch(e){}wake=null;current=null;trail=[];render()}
 $("sClose").onclick=hideCard;
 $("sFav").onclick=()=>{if(current)toggleFav(current.id)};
-$("sEdit").onclick=()=>{const i=current;hideCard();openForm(i)};
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){if(!$("sheet").hidden)closeForm();else if(!$("show").hidden)hideCard()}
+  if(e.key==="Escape"&&$("fbSheet").hidden&&!$("show").hidden)hideCard()
 });
 document.addEventListener("visibilitychange",async()=>{if(document.visibilityState==="visible"&&!$("show").hidden&&!wake){try{wake=await navigator.wakeLock?.request("screen")}catch(e){}}});
 
@@ -2880,7 +2868,7 @@ $("vwClose").onclick=closeViewer;
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("vw").hidden){e.stopImmediatePropagation();closeViewer()}},true);
 
 /* ---------- feedback: "reportForm" in leaflets.json is the feedback form's link; empty hides the link ---------- */
-function feedbackLinks(){const u=shared.reportForm;$("suggest").hidden=!u;if(u)$("suggest").href=u}
+function feedbackLinks(){$("suggest").hidden=!shared.reportForm}
 
 /* ---------- anonymous usage counts (settings in leaflets.json) ----------
    "statsCode": a GoatCounter site code. Empty means nothing is ever sent.
@@ -2946,43 +2934,41 @@ $("shareBtn").onclick=async()=>{
 $("shClose").onclick=()=>{$("share").hidden=true;try{wake?.release()}catch(e){}wake=null};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("share").hidden)$("shClose").click()});
 
-/* ---------- add your own ---------- */
-$("fTag").innerHTML=TAGS.map(t=>`<option>${t.replace(/&/g,"&amp;")}</option>`).join("");
-function openForm(i){
-  editing=i||null;confirmDel=false;$("fErr").hidden=true;
-  const own=!i||i.mine;
-  $("fMine").hidden=!own;$("fHelp").hidden=!own;
-  $("fHead").textContent=i?"Edit your leaflet":"Add your own leaflet";
-  $("fTitle").value=i?.title||"";$("fUrl").value=i?.url||"";
-  $("fKind").value=i?.kind||(KINDS[tab]?tab:"condition");$("fTag").value=i?.tag||"Other";
-  $("fDel").hidden=!(i&&i.mine);$("fDel").textContent="Delete";
-  $("sheet").hidden=false;$("fTitle").focus();
+/* ---------- feedback and help menu ----------
+   Each option opens the feedback form ("reportForm" in leaflets.json). If "feedbackEntry" is set
+   (the form's "What is this about?" question, e.g. "entry.123456789"), the option's label is filled in for them.
+   An option can instead have its own "url" via "feedbackMenu" in leaflets.json. */
+const FB_DEFAULT=[
+  {key:"request",label:"Request a leaflet",hint:"Suggest a leaflet to add for your speciality"},
+  {key:"leaflet",label:"Report a leaflet problem",hint:"A code opens the wrong leaflet, or nothing"},
+  {key:"bug",label:"Something isn't working",hint:"A problem with the app itself"},
+  {key:"idea",label:"General feedback or ideas",hint:"What would make the app more useful"},
+  {key:"install",label:"Help installing the app",hint:"Step-by-step for iPhone and Android",action:"install"}];
+function fbUrl(o){
+  if(o.url)return o.url;
+  const f=shared.reportForm;if(!f)return "";
+  const e=shared.feedbackEntry;
+  return e?f.split("?")[0]+"?usp=pp_url&"+encodeURIComponent(e)+"="+encodeURIComponent(o.label):f;
 }
-function closeForm(){$("sheet").hidden=true;editing=null}
-$("add").onclick=()=>openForm();
-$("fCancel").onclick=closeForm;
-$("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeForm()});
-function err(t){$("fErr").textContent=t;$("fErr").hidden=false}
-$("form").addEventListener("submit",e=>{
-  e.preventDefault();
-  let id=editing?.id;
-  if(!editing||editing.mine){
-    const title=$("fTitle").value.trim();let url=$("fUrl").value.trim();
-    if(!title)return err("Add the condition or procedure name.");
-    if(url&&!/^https?:\/\//i.test(url))url="https://"+url;
-    try{const u=new URL(url);if(!u.hostname.includes("."))throw 0}catch(_){return err("That link doesn't look right. Paste the full web address of the leaflet.")}
-    id=id||("u-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6));
-    const it={id,title,url,kind:$("fKind").value,tag:$("fTag").value,source:"Added by you"};
-    const n=mine.findIndex(x=>x.id===id);n<0?mine.push(it):mine[n]=it;save("mine",mine);
+function openFeedback(){
+  const box=$("fbOpts");box.textContent="";
+  for(const o of (Array.isArray(shared.feedbackMenu)&&shared.feedbackMenu.length?shared.feedbackMenu:FB_DEFAULT)){
+    const url=o.action==="install"?"":fbUrl(o);
+    if(o.action!=="install"&&!url)continue;
+    const b=el(url?"a":"button","fbopt");
+    if(url){b.href=url;b.target="_blank";b.rel="noopener"}else b.type="button";
+    b.append(el("b",null,o.label),el("span",null,o.hint||""));
+    b.onclick=()=>{track("feedback/"+(o.key||o.label),"Feedback: "+o.label);closeFeedback();
+      if(o.action==="install"){$("installPanel").hidden=false;$("instX").focus()}};
+    box.append(b);
   }
-  closeForm();render();
-});
-$("fDel").onclick=()=>{
-  if(!confirmDel){confirmDel=true;$("fDel").textContent="Tap again to delete";return}
-  mine=mine.filter(x=>x.id!==editing.id);save("mine",mine);
-  favs.delete(editing.id);save("favs",[...favs]);
-  closeForm();render();
-};
+  $("fbSheet").hidden=false;$("fbClose").focus();
+}
+function closeFeedback(){$("fbSheet").hidden=true}
+$("suggest").onclick=openFeedback;
+$("fbClose").onclick=closeFeedback;
+$("fbSheet").addEventListener("click",e=>{if(e.target.id==="fbSheet")closeFeedback()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("fbSheet").hidden)closeFeedback()});
 
 /* ---------- offline ---------- */
 function net(){$("offline").hidden=navigator.onLine!==false}

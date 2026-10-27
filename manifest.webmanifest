@@ -1,6 +1,6 @@
 {
-  "name": "Leaflet QR",
-  "short_name": "Leaflet QR",
+  "name": "EyeLeaflets",
+  "short_name": "EyeLeaflets",
   "description": "Show patients a QR code for any eye patient information leaflet. Works offline.",
   "start_url": "./",
   "scope": "./",
