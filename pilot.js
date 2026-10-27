@@ -87,14 +87,27 @@
     });
     box.setAttribute("aria-label", name);
   }
-  const picked = id => document.querySelector("#" + id + " .pchip[aria-pressed=true]")?.dataset.v || "";
+  const picked = id => id === "pRole" ? (document.getElementById("pRoleSel").value || "")
+    : document.querySelector("#" + id + " .pchip[aria-pressed=true]")?.dataset.v || "";
+  /* roles: either ["Nurse", ...] or [{"group": "Nursing", "roles": ["Staff nurse", ...]}, ...] */
+  const roleList = () => (cfg.roles || []).flatMap(r => typeof r === "string" ? [r] : r.roles || []);
+  function roleSelect(chosen) {
+    const sel = document.getElementById("pRoleSel");
+    sel.innerHTML = '<option value="">Choose your role</option>';
+    (cfg.roles || []).forEach(r => {
+      const add = (parent, v) => { const o = document.createElement("option"); o.value = o.textContent = v; o.selected = v === chosen; parent.append(o) };
+      if (typeof r === "string") add(sel, r);
+      else { const g = document.createElement("optgroup"); g.label = r.group; (r.roles || []).forEach(v => add(g, v)); sel.append(g) }
+    });
+    sel.onchange = check;
+  }
   function check() {
     const ok = picked("pRole") && picked("pArea") && (!(cfg.sites || []).length || picked("pSite"));
     document.getElementById("pSave").disabled = !ok;
   }
   function openSheet() {
     const p = profile() || {};
-    chips(document.getElementById("pRole"), cfg.roles || [], p.role, "Your role");
+    roleSelect(p.role);
     chips(document.getElementById("pArea"), cfg.areas || [], p.area, "Where you mainly work");
     const hasSites = (cfg.sites || []).length;
     document.getElementById("pSiteWrap").hidden = !hasSites;

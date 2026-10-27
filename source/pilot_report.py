@@ -59,7 +59,8 @@ if not rows:
 rows.sort(key=lambda x: x["when"])
 _slug = lambda v: "".join(c if c.isalnum() else "-" for c in v.lower().replace("&", "and")).strip("-")
 LABELS = {}
-for v in cfg.get("roles", []) + cfg.get("areas", []) + cfg.get("sites", []):
+roles = [x for r in cfg.get("roles", []) for x in ([r] if isinstance(r, str) else r.get("roles", []))]
+for v in roles + cfg.get("areas", []) + cfg.get("sites", []):
     k = _slug(v)
     while "--" in k: k = k.replace("--", "-")
     LABELS[k] = v

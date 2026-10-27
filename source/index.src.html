@@ -189,6 +189,8 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 .psheet .plead{margin:0;color:var(--muted);font-size:.92rem}
 .psheet .pq{font-weight:700;margin:0 0 6px}
 .pchips{display:flex;flex-wrap:wrap;gap:8px}
+.psel{display:block;width:100%;font-size:1rem;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);min-height:48px}
+.psheet label.pq{display:block}
 .pchip{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:99px;padding:9px 14px;font-weight:600;font-size:.92rem;cursor:pointer;min-height:40px}
 .pchip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
 .psheet details{font-size:.88rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
@@ -353,7 +355,7 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   <div class="pcard" role="dialog" aria-modal="true" aria-labelledby="pTitle">
     <h3 id="pTitle">Help us evaluate this app</h3>
     <p class="plead">We're running a pilot. Tell us your role and where you mainly work, once, so we can see who finds the app useful.</p>
-    <div><p class="pq">Your role</p><div class="pchips" id="pRole" role="group"></div></div>
+    <div><label class="pq" for="pRoleSel">Your role</label><select id="pRoleSel" class="psel"></select></div>
     <div><p class="pq">Where you mainly work</p><div class="pchips" id="pArea" role="group"></div></div>
     <div id="pSiteWrap" hidden><p class="pq">Your site</p><div class="pchips" id="pSite" role="group"></div></div>
     <details>
