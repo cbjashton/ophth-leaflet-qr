@@ -4,7 +4,7 @@
  "statsCode": "",
  "pilot": {
   "roles": [
-   {"group": "Doctors", "roles": ["Consultant", "Fellow", "Resident doctor (specialty training)", "Resident doctor (foundation or core)", "Specialty or associate specialist doctor (SAS)"]},
+   {"group": "Doctors", "roles": ["Consultant", "Fellow", "Resident doctor (specialty training)", "Resident doctor (foundation)", "Specialty or associate specialist doctor (SAS)"]},
    {"group": "Nursing", "roles": ["Nurse", "Nurse practitioner or advanced nurse practitioner", "Clinical nurse specialist", "Healthcare assistant or clinical support worker"]},
    {"group": "Allied health and science", "roles": ["Optometrist", "Orthoptist", "Ophthalmic technician or science practitioner", "Ophthalmic imaging or photography", "Pharmacist or pharmacy technician"]},
    {"group": "Support and admin", "roles": ["Eye clinic liaison officer (ECLO)", "Admin, booking or reception"]},
