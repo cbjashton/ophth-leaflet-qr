@@ -51,6 +51,7 @@ Everything that collects data is in `pilot.js`. Nothing is sent, and staff aren'
 
 - `"roles"` and `"areas"`: edit freely. Changing a label starts a new group in the report.
 - `"sites"`: leave empty for the single-site pilot. Add sites (e.g. `["City Road", "St George's", "Croydon"]`) when it spreads and staff are asked for their site too.
+- `"round"`: a name for this pilot, e.g. `"pilot-1"`. Changing it starts afresh: every phone forgets its earlier answers and waiting counts, and staff are asked again. Set it when you switch the pilot on.
 - `"surveyForm"`: link to a form where staff can leave their NHS email for pilot surveys. Emails go to that form only, never into the app's counts.
 
 **What is counted** (each with role, areas, local date and time, whether the phone had signal, and a random code for the phone):
@@ -58,7 +59,7 @@ installed to home screen; app opened (or returned to after 15 minutes); role and
 
 **Never recorded:** names, email addresses, search words, or anything about patients. The random phone code lets the report count active phones and returning users without knowing whose phone it is; mention it in the DPIA screening.
 
-**Counts made with no signal** wait on the phone and are sent later with the time they happened.
+**Counts made with no signal**, or that fail to send on weak signal, stay on the phone until GoatCounter has received them, and keep the time they happened.
 
 **Reports.** In GoatCounter: Settings → Export → Start export; GoatCounter emails a CSV. Then run `python3 source/pilot_report.py export.csv` for `pilot-report.html` (summary, by week with returning phones, by role, by area (a person in several areas is counted in each), number of areas per person, by hour and weekday, most-used and never-used leaflets, phone systems) and `pilot-events.csv` (one row per count, for Excel). Keep exports off GitHub: the repository is public. Both report files are ignored by git.
 

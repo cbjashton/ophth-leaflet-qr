@@ -12,7 +12,8 @@
   ],
   "areas": ["Accident & Emergency", "Cornea & external eye", "Paediatrics", "Cataract", "Glaucoma", "Medical retina", "Vitreoretinal", "Oculoplastics", "Strabismus & neuro", "Uveitis", "Other"],
   "sites": [],
-  "surveyForm": ""
+  "surveyForm": "",
+  "round": ""
  },
  "leaflets": [
   {

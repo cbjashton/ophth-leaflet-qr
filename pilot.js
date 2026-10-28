@@ -22,7 +22,7 @@
    whose phone it is. GoatCounter adds browser, operating system, screen size and country.
    Never sent: names, email addresses, search words, anything about patients.
 
-   Counts made with no signal are kept on the phone and sent later, with the time they happened.
+   Counts made with no signal, or whose sending fails, are kept on the phone and sent later, with the time they happened.
    Each count is one GoatCounter "event": path  <event>/<role>/<areas>[/<site>][/<leaflet>]
                                          <areas> = every area chosen, joined with "+" in the order
                                          of "areas" in leaflets.json, e.g. accident-and-emergency+cornea-and-external-eye
@@ -42,6 +42,14 @@
     let id = get("phone", "");
     if (!id) { id = Array.from(crypto.getRandomValues(new Uint8Array(8)), b => "abcdefghjkmnpqrstuvwxyz23456789"[b % 31]).join("").slice(0, 8); put("phone", id) }
     return id;
+  }
+  /* "round" in the pilot settings: change it to start afresh. Phones then forget the old sign-up,
+     waiting counts and install flag, and everyone is asked again. */
+  const round = () => String(cfg.round || "");
+  function newRound() {
+    if (get("round", "") === round()) return;
+    ["profile", "q", "installSent"].forEach(k => { try { localStorage.removeItem(P + k) } catch (e) {} });
+    put("round", round());
   }
   const profile = () => {
     const p = get("profile", null);
@@ -70,18 +78,34 @@
     if ((cfg.sites || []).length) parts.push(slug(p.site));
     if (leaflet) parts.push(String(leaflet).replace(/[^\w-]/g, ""));
     const title = stamp() + " | " + phone() + " | " + (navigator.onLine === false ? "offline" : "online");
-    const q = get("q", []); q.push([parts.join("/"), title]); put("q", q.slice(-1000));
+    const q = get("q", []); q.push([parts.join("/"), title, uid()]); put("q", q.slice(-1000));
     flush();
   }
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
+  /* Send waiting counts one at a time. Each stays on the phone until GoatCounter has received it,
+     so a send that fails on weak signal is kept and tried again (when back online, at the next count,
+     or when the app is next opened or brought back). */
+  let sending = false;
+  function send(p, t) {
+    const url = "https://" + encodeURIComponent(code) + ".goatcounter.com/count?p=" + encodeURIComponent(p) + "&t=" + encodeURIComponent(t) +
+      "&e=true&rnd=" + Math.random().toString(36).slice(2);
+    return fetch(url, { mode: "no-cors", cache: "no-store", credentials: "omit", keepalive: true });
+  }
   function flush() {
-    if (!on() || navigator.onLine === false) return;
-    const q = get("q", []); if (!q.length) return; put("q", []);
-    q.forEach(([p, t], n) => setTimeout(() => {
-      const img = new Image();
-      img.src = "https://" + encodeURIComponent(code) + ".goatcounter.com/count?p=" + encodeURIComponent(p) + "&t=" + encodeURIComponent(t) +
-        "&e=true&rnd=" + Math.random().toString(36).slice(2);
-    }, n * 150));
+    if (!on() || sending || navigator.onLine === false) return;
+    let q = get("q", []); if (!q.length) return;
+    if (q.some(x => !x[2])) { q = q.map(x => x[2] ? x : [x[0], x[1], uid()]); put("q", q) }   // counts saved by an older version
+    sending = true;
+    let n = 0;
+    const next = () => {                     // oldest first, including counts made while sending
+      const first = get("q", [])[0];
+      if (!first || ++n > 500 || !on() || navigator.onLine === false) { sending = false; return }
+      const [p, t, id] = first;
+      send(p, t).then(() => { put("q", get("q", []).filter(x => x[2] !== id)); setTimeout(next, 100) })
+        .catch(() => { sending = false });   // not received: keep it and the rest for the next try
+    };
+    next();
   }
 
   function standalone() { try { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true } catch (e) { return false } }
@@ -162,6 +186,7 @@
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") hiddenAt = Date.now();
       else if (hiddenAt && Date.now() - hiddenAt > 15 * 60 * 1000) { hiddenAt = 0; if (profile()) ev("open") }
+      else flush();
     });
   }
 
@@ -171,6 +196,7 @@
     start(shared, after) {
       const was = code;
       cfg = shared.pilot || {}; code = shared.statsCode || ""; onSignup = after || null;
+      if (code) newRound();
       if (!wired) { wire(); wired = true }
       document.getElementById("pilotLink").hidden = !code;
       if (!code) return;
