@@ -37,6 +37,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 header{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 h1{font-size:1.55rem;margin:0;letter-spacing:-.01em}
 .count{font:500 .78rem var(--mono);color:var(--muted)}
+.netnote{display:block;margin-top:2px;font-size:.74rem;color:var(--muted)}
+.netnote::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#b08a2e;margin-right:5px;vertical-align:1px}
+.netnote[hidden]{display:none}
+.badge{font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:5px;background:#e6f2ea;color:#1d6b3a}
+.badge.upd{background:#f4ecd9;color:#7a5a12}
+.reqlink{margin-top:10px;font:700 .92rem var(--sans);color:var(--accent);background:var(--accent-soft);border:0;border-radius:10px;padding:10px 14px;text-decoration:none;display:inline-block}
 header{align-items:flex-start}
 .sharebtn{display:flex;align-items:center;gap:6px;font-weight:700;font-size:.88rem;padding:9px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--accent);cursor:pointer;flex:none}
 .sharebtn svg{width:18px;height:18px}
@@ -214,7 +220,7 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 </head>
 <body>
 <div class="wrap">
-  <header><div><h1>EyeLeaflets</h1><span class="count" id="count"></span></div><div class="hdright"><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button>
+  <header><div><h1>EyeLeaflets</h1><span class="count" id="count"></span><span class="netnote" id="offline" hidden title="The patient's phone needs signal or Wi-Fi to open the leaflet">Offline · codes still work</span></div><div class="hdright"><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button>
     <button type="button" class="suggest" id="suggest" hidden aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-4 3.5V16H4z"/></svg>Feedback</button></div></header>
   <div class="getapp" id="getApp" hidden>
     <img src="icon-192.png" alt="" width="40" height="40">
@@ -224,7 +230,6 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   </div>
   <button class="banner upd" id="updBar" hidden>A new version of the app is ready. Tap to update.</button>
   <div class="banner info" id="listBar" hidden>Leaflet list updated.</div>
-  <div class="banner" id="offline" hidden>You're offline. Codes still work; the patient needs signal or Wi-Fi to open the leaflet.</div>
   <input class="search" id="q" type="search" placeholder="Search all leaflets" autocomplete="off" aria-label="Search all leaflets">
   <div class="tabs" role="tablist" id="tabs">
     <button class="tab" role="tab" data-k="fav"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>Favourites</button>
@@ -392,7 +397,7 @@ function save(k,v){try{localStorage.setItem("lqr-"+k,JSON.stringify(v))}catch(e)
 let shared=load("shared",null); if(!shared||(shared.updated||"")<BUNDLED.updated) shared=BUNDLED;
 let mine=[] /* staff can no longer add their own leaflets */, favs=new Set(load("favs",[])), uses=load("uses",{});
 let tab=load("tab","all"); if(tab==="fav"&&!load("favs",[]).length) tab="all";
-let specs=new Set(); /* chosen subspecialties; empty means all */
+let specs=new Set(load("specs",[])); /* chosen subspecialties; empty means all. Remembered on this phone */
 let current=null, trail=[], editing=null, confirmDel=false, wake=null;
 
 function all(){return shared.leaflets.map(i=>OLD_TAGS[i.tag]?{...i,tag:OLD_TAGS[i.tag]}:i).concat(mine.map(m=>({...m,mine:true})))}
@@ -426,6 +431,8 @@ function rowEl(i,showUses){
   const left=el("div");left.style.minWidth="0";
   left.append(el("div","t",i.title));
   const m=el("div","m");
+  const mk=marks[i.id];
+  if(mk)m.append(el("span","badge"+(mk.k==="upd"?" upd":""),mk.k==="upd"?"Updated":"New"));
   m.append(el("span","tag",i.tag||"Other"));
   if(i.mine)m.append(el("span","src","Added by you"));
   const rc=relatedTo(i.id).length;
@@ -529,9 +536,30 @@ function search(list,q){
   return out.sort((a,b)=>b[0]-a[0]||a[1].title.localeCompare(b[1].title)).map(p=>p[1]);
 }
 
+/* ---------- new and updated leaflets ----------
+   The phone remembers each leaflet's address. A leaflet it hasn't seen before is marked New;
+   one whose address changed is marked Updated. Marks last 14 days, or until the leaflet is opened.
+   Nothing is marked the first time the app is used. */
+let markedFor=null, marks=load("marks",{});
+function markChanges(){
+  const seen=load("seen",null), now=Date.now(), cur={};
+  all().forEach(i=>{cur[i.id]=i.url});
+  if(seen){
+    for(const id in cur){
+      if(!(id in seen))marks[id]={k:"new",at:now};
+      else if(seen[id]!==cur[id])marks[id]={k:"upd",at:now};
+    }
+  }
+  for(const id in marks)if(!(id in cur)||now-marks[id].at>14*864e5)delete marks[id];
+  save("seen",cur);save("marks",marks);
+}
+function clearMark(id){if(marks[id]){delete marks[id];save("marks",marks)}}
+
 let missT=null,missSent="";
 function noHit(){const q=$("q").value.trim().toLowerCase();clearTimeout(missT);missT=setTimeout(()=>{if(q.length>=3&&q===$("q").value.trim().toLowerCase()&&q!==missSent){missSent=q;Pilot.ev("search")}},2500)}
 function render(){
+  save("specs",[...specs]);
+  if(markedFor!==shared){markChanges();markedFor=shared}
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===tab));
   const list=all(), q=$("q").value.trim().toLowerCase();
   const words=normText(q).split(" ").filter(Boolean);
@@ -555,6 +583,12 @@ function render(){
       :specs.size?(specs.size===1?"No "+[...specs][0]+" leaflets in this tab.":"No leaflets for the chosen subspecialties in this tab.")
       :"No leaflets match these filters.";
     const li=el("li","empty",msg);
+    if(words.length&&shared.reportForm){
+      const req=(Array.isArray(shared.feedbackMenu)&&shared.feedbackMenu.find(o=>o.key==="request"))||FB_DEFAULT[0];
+      const a=el("a","reqlink","Request this leaflet");a.href=fbUrl(req);a.target="_blank";a.rel="noopener";
+      a.onclick=()=>Pilot.ev("feedback","request-from-search");
+      li.append(el("br"),el("span",null,"Can't find it? Tell us which leaflet you need."),el("br"),a);
+    }
     if(!words.length&&specs.size){const b=el("button","clearlink","Show all subspecialties");b.onclick=()=>{specs.clear();render()};li.append(el("br"),b)}
     ul.append(li);
   }
@@ -613,6 +647,7 @@ function qrSvg(text){
   return '<svg viewBox="0 0 '+s+' '+s+'" shape-rendering="crispEdges" role="img" aria-label="QR code"><rect width="'+s+'" height="'+s+'" fill="#fff"/><path d="'+p+'" fill="#000"/></svg>';
 }
 async function openCard(i){
+  clearMark(i.id);
   trail=[];showCard(i);$("show").hidden=false;$("sClose").focus();
   try{if(!wake)wake=await navigator.wakeLock?.request("screen")}catch(e){wake=null}
 }
