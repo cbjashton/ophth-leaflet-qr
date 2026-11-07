@@ -163,7 +163,7 @@
     document.getElementById("pSiteWrap").hidden = !hasSites;
     if (hasSites) chips(document.getElementById("pSite"), cfg.sites, p.site, "Your site");
     const f = cfg.surveyForm; const a = document.getElementById("pSurvey"); a.hidden = !f; if (f) a.href = f;
-    document.getElementById("pPhone").textContent = phone();
+    const ph = document.getElementById("pPhone"); if (ph) ph.textContent = phone();
     document.getElementById("pClose").hidden = !profile();
     document.getElementById("pilotSheet").hidden = false;
     check();

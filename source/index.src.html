@@ -29,7 +29,7 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 var(--sans);padding-inline:16px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:1rem/1.45 var(--sans);padding-inline:16px;-webkit-text-size-adjust:100%}
 [hidden]{display:none!important}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -50,6 +50,16 @@ header{align-items:flex-start}
 .hdright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
 .suggest{background:none;border:0;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:none;padding:4px 6px}
 .suggest svg{width:16px;height:16px}
+.hdlinks{display:flex;align-items:center;gap:2px}
+.aabtn{background:none;border:0;cursor:pointer;font:800 .9rem var(--sans);color:var(--accent);padding:4px 8px;border-radius:8px}
+.aabtn[aria-expanded="true"]{background:var(--accent-soft)}
+.aapop{position:absolute;right:16px;z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.15);padding:12px;display:grid;gap:8px;width:230px}
+.aapop b{font-size:.9rem}
+.aaseg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.aaseg button{flex:1;border:0;background:var(--surface);padding:9px 0;font:700 1rem var(--sans);color:var(--fg);cursor:pointer}
+.aaseg button+button{border-left:1px solid var(--line)}
+.aaseg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.aaseg button:nth-child(1){font-size:.9rem}.aaseg button:nth-child(3){font-size:1.12rem}
 .suggest:active{opacity:.6}
 .show .sharenote{margin:0;max-width:32ch;font-size:.95rem;color:#3c4a54}
 .show .steps{border:0;background:none;border-radius:0;overflow:visible;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;max-width:340px;width:100%;text-align:left;font-size:.95rem;color:#14212b}
@@ -60,20 +70,44 @@ header{align-items:flex-start}
 .banner.upd{border:0;width:100%;text-align:left;font:700 .92rem var(--sans);background:var(--accent);color:var(--surface);cursor:pointer;padding:12px 14px}
 .banner.info{background:var(--accent-soft);color:var(--accent);font-weight:700}
 .search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.navrow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+.navrow::-webkit-scrollbar{display:none}
+.navrow.atend{-webkit-mask-image:none;mask-image:none}
+.tabs{display:flex;gap:6px;flex:none}
 .tab{min-width:0;font-weight:700;font-size:.86rem;line-height:1.2;padding:10px 4px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center}
 .tab svg{width:15px;height:15px;flex:none}
-@media (max-width:359px){.tab{font-size:.78rem;padding-inline:2px;gap:3px}.tab svg{width:13px;height:13px}}
+
 .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 .tab[data-k="fav"] svg{color:var(--star);fill:currentColor}
 .tab[data-k="fav"][aria-selected="true"] svg{color:var(--surface)}
 .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .filters{flex-wrap:nowrap;align-items:stretch}
 .specbtn{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700;font-size:.95rem;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);cursor:pointer;text-align:left}
+.recent .sec{margin-bottom:6px}
+.tour{position:fixed;inset:0;z-index:200;background:rgba(10,25,35,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.tour[hidden]{display:none}
+.tcard{background:var(--surface);color:var(--fg);border-radius:20px;padding:22px 20px 18px;width:100%;max-width:420px;display:grid;gap:12px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.till{height:150px;border-radius:14px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;gap:16px;color:var(--accent)}
+.till svg{width:72px;height:72px}
+.tcard h3{margin:0;font-size:1.25rem}.tcard p{margin:0;color:var(--muted);line-height:1.45}
+.tdots{display:flex;gap:6px;justify-content:center}.tdots i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:width .2s}.tdots i.on{background:var(--accent);width:18px;border-radius:4px}
+.tbtns{display:flex;justify-content:space-between;align-items:center}
+.tskip{background:none;border:0;color:var(--muted);font:700 1rem var(--sans);padding:10px 4px;cursor:pointer}
+.tnext{background:var(--accent);color:var(--surface);border:0;border-radius:12px;padding:11px 22px;font:800 1rem var(--sans);cursor:pointer}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding:0 16px 2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:flex;align-items:center;gap:6px;max-width:15rem;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:8px 12px;font:700 .86rem var(--sans);color:var(--fg);cursor:pointer}
+.chip span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip svg{width:16px;height:16px;flex:none;color:var(--accent)}
 .specbtn span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .specbtn svg{width:18px;height:18px;flex:none;color:var(--muted)}
 .specbtn.on{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 .specbtn.on svg{color:var(--surface)}
+.navrow .tab{flex:none;padding:8px 13px;border-radius:99px;white-space:nowrap}
+.navrow .filters{flex:none;gap:4px}
+.navrow .specbtn{flex:none;max-width:62vw;padding:8px 12px;font-size:.86rem;border-radius:99px}
+.navrow .specbtn svg{width:15px;height:15px}
+.navrow .specclear{border-radius:99px}
 .specclear{flex:none;width:46px;font-weight:700;font-size:1.05rem;border:1px solid var(--accent);border-radius:10px;background:var(--surface);color:var(--accent);cursor:pointer}
 .panel{position:fixed;inset:0;z-index:25;background:rgba(10,18,24,.45);display:flex;align-items:flex-end;justify-content:center}
 .panelcard{background:var(--surface);width:100%;max-width:560px;max-height:88vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px}
@@ -115,6 +149,13 @@ li+li{border-top:1px solid var(--line)}
 .row{flex:1;min-width:0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;text-align:left;background:none;border:0;padding:13px 4px 13px 14px;cursor:pointer}
 .row:active{background:var(--accent-soft)}
 .row .t{font-weight:700;font-size:1.02rem;min-width:0;overflow-wrap:anywhere}
+li.grp{flex-wrap:wrap}
+li.grp .row{padding-bottom:6px}
+.aud{display:flex;flex-wrap:wrap;gap:6px;flex-basis:100%;padding:0 14px 13px}
+.audbtn{border:1px solid var(--accent);color:var(--accent);background:var(--surface);border-radius:99px;padding:6px 12px;font:700 .82rem var(--sans);cursor:pointer;min-height:32px}
+.audbtn:active{background:var(--accent-soft)}
+.audbtn.fav::after{content:" ★";color:var(--star)}
+.starsp{flex:none;width:48px}
 .row .m{display:flex;gap:6px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin-top:3px}
 .tag{font:700 .64rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:2px 6px;border-radius:4px}
 .fab:disabled{opacity:.5}
@@ -219,9 +260,10 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 </style>
 </head>
 <body>
+<div class="aapop" id="aaPop" role="dialog" aria-label="Text size" hidden><b>Text size</b><div class="aaseg" id="aaSeg"><button type="button" data-s="100" aria-label="Standard text">A</button><button type="button" data-s="112" aria-label="Larger text">A+</button><button type="button" data-s="125" aria-label="Largest text">A++</button></div></div>
 <div class="wrap">
   <header><div><h1>EyeLeaflets</h1><span class="count" id="count"></span><span class="netnote" id="offline" hidden title="The patient's phone needs signal or Wi-Fi to open the leaflet">Offline · codes still work</span></div><div class="hdright"><button class="sharebtn" id="shareBtn" aria-label="Share this app with a colleague"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>Share app</button>
-    <button type="button" class="suggest" id="suggest" hidden aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-4 3.5V16H4z"/></svg>Feedback</button></div></header>
+    <div class="hdlinks"><button type="button" class="aabtn" id="aaBtn" aria-haspopup="dialog" aria-label="Text size">Aa</button><button type="button" class="suggest" id="suggest" hidden aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-4 3.5V16H4z"/></svg>Feedback</button></div></div></header>
   <div class="getapp" id="getApp" hidden>
     <img src="icon-192.png" alt="" width="40" height="40">
     <div class="gtxt"><b>Get the app</b><span>Add EyeLeaflets to your home screen</span></div>
@@ -231,6 +273,11 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   <button class="banner upd" id="updBar" hidden>A new version of the app is ready. Tap to update.</button>
   <div class="banner info" id="listBar" hidden>Leaflet list updated.</div>
   <input class="search" id="q" type="search" placeholder="Search all leaflets" autocomplete="off" aria-label="Search all leaflets">
+  <div class="navrow" id="navRow">
+  <div class="filters">
+    <button class="specbtn" id="specBtn" aria-haspopup="dialog"><span id="specLabel">All subspecialties</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <button class="specclear" id="specClear" hidden aria-label="Clear subspecialty filter">✕</button>
+  </div>
   <div class="tabs" role="tablist" id="tabs">
     <button class="tab" role="tab" data-k="fav"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>Favourites</button>
     <button class="tab" role="tab" data-k="all">All</button>
@@ -239,10 +286,8 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
     <button class="tab" role="tab" data-k="medicines">Drops &amp; lenses</button>
     <button class="tab" role="tab" data-k="visit">Tests &amp; visits</button>
   </div>
-  <div class="filters">
-    <button class="specbtn" id="specBtn" aria-haspopup="dialog"><span id="specLabel">All subspecialties</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-    <button class="specclear" id="specClear" hidden aria-label="Clear subspecialty filter">✕</button>
   </div>
+  <div class="recent" id="recentWrap" hidden><div class="sec">Recent</div><div class="chips" id="recent"></div></div>
   <div class="sec" id="topHead" hidden>Most used</div>
   <ul id="top" hidden></ul>
   <div class="sec" id="allHead" hidden>A–Z</div>
@@ -348,6 +393,15 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   </div>
 </div>
 
+<div class="tour" id="tour" hidden role="dialog" aria-modal="true" aria-labelledby="tourH">
+  <div class="tcard">
+    <div class="till" id="tourIll" aria-hidden="true"></div>
+    <div class="tdots" id="tourDots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <h3 id="tourH"></h3>
+    <p id="tourP"></p>
+    <div class="tbtns"><button type="button" class="tskip" id="tourSkip">Skip</button><button type="button" class="tnext" id="tourNext">Next</button></div>
+  </div>
+</div>
 <div class="psheet" id="pilotSheet" hidden>
   <div class="pcard" role="dialog" aria-modal="true" aria-labelledby="pTitle">
     <h3 id="pTitle">Help us evaluate this app</h3>
@@ -355,15 +409,6 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
     <div><label class="pq" for="pRoleSel">Your role</label><select id="pRoleSel" class="psel"></select></div>
     <div><p class="pq" id="pAreaQ">Where you work <span class="pqs">Choose all that apply</span></p><div class="pchips" id="pArea" role="group" aria-labelledby="pAreaQ"></div></div>
     <div id="pSiteWrap" hidden><p class="pq">Your site</p><div class="pchips" id="pSite" role="group"></div></div>
-    <details>
-      <summary>What the app records</summary>
-      <ul>
-        <li>When the app is opened, and which leaflet codes are shown.</li>
-        <li>Your role and areas (above), and a random code for this phone (<b id="pPhone"></b>) so we can count active phones.</li>
-        <li>Searches that find nothing are counted, but the words you type are never sent.</li>
-        <li>Never recorded: your name, email, or anything about patients.</li>
-      </ul>
-    </details>
     <p class="pneed" id="pNeed" aria-live="polite"></p>
     <div class="pbar">
       <a id="pSurvey" target="_blank" rel="noopener" hidden>Join the pilot survey list</a>
@@ -555,6 +600,51 @@ function markChanges(){
 }
 function clearMark(id){if(marks[id]){delete marks[id];save("marks",marks)}}
 
+/* ---------- text size (this phone) ---------- */
+function setSize(s){s=[100,112,125].includes(+s)?+s:100;document.documentElement.style.fontSize=s===100?"":s+"%";
+  document.querySelectorAll("#aaSeg button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.s===s));save("textSize",s)}
+setSize(load("textSize",100));
+function aaClose(){$("aaPop").hidden=true;$("aaBtn").setAttribute("aria-expanded","false")}
+$("aaBtn").onclick=e=>{e.stopPropagation();const p=$("aaPop");if(!p.hidden)return aaClose();
+  const r=$("aaBtn").getBoundingClientRect();p.style.top=(r.bottom+scrollY+6)+"px";p.hidden=false;$("aaBtn").setAttribute("aria-expanded","true");
+  (p.querySelector("[aria-pressed=true]")||p.querySelector("button")).focus()};
+document.querySelectorAll("#aaSeg button").forEach(b=>b.onclick=()=>{setSize(b.dataset.s);aaClose();$("aaBtn").focus()});
+document.addEventListener("click",e=>{if(!$("aaPop").hidden&&!$("aaPop").contains(e.target))aaClose()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("aaPop").hidden){aaClose();$("aaBtn").focus()}});
+
+/* the one-row tabs fade at the right edge until scrolled to the end */
+function navFade(){const n=$("navRow");n.classList.toggle("atend",n.scrollLeft+n.clientWidth>=n.scrollWidth-4)}
+$("navRow").addEventListener("scroll",navFade,{passive:true});addEventListener("resize",navFade);
+
+/* ---------- recent: the last leaflets shown on this phone ---------- */
+let recent=load("recent",[]);
+function addRecent(id){recent=[id,...recent.filter(x=>x!==id)].slice(0,6);save("recent",recent)}
+const chipQr='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>';
+function fillRecent(show){
+  const m=byId(),items=show?recent.map(id=>m[id]).filter(Boolean):[],box=$("recent");box.innerHTML="";
+  items.forEach(i=>{const b=el("button","chip");b.insertAdjacentHTML("beforeend",chipQr);b.append(el("span",null,i.title));
+    b.setAttribute("aria-label","Show code for "+i.title);b.onclick=()=>openCard(i);box.append(b)});
+  $("recentWrap").hidden=!items.length;
+}
+
+/* ---------- welcome cards: shown once per phone ---------- */
+const TOUR=[
+  ["Find the leaflet","Search, or tap a tab. Filter by your subspecialty.",'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>'],
+  ["The patient scans the code","They point their phone camera at the screen. The official leaflet opens on their phone.",'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>'],
+  ["Star your usual leaflets","Tap the star to keep the ones you give most often in Favourites.",'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>']];
+let tourStep=0;
+function tourShow(n){tourStep=n;const [h,t,ill]=TOUR[n];$("tourH").textContent=h;$("tourP").textContent=t;$("tourIll").innerHTML=ill;
+  document.querySelectorAll("#tourDots i").forEach((d,k)=>d.classList.toggle("on",k===n));$("tourNext").textContent=n===TOUR.length-1?"Start":"Next";$("tourNext").focus()}
+function tourEnd(){$("tour").hidden=true;save("toured",true)}
+$("tourNext").onclick=()=>tourStep<TOUR.length-1?tourShow(tourStep+1):tourEnd();
+$("tourSkip").onclick=tourEnd;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("tour").hidden)tourEnd()});
+function maybeTour(){
+  if(load("toured",false))return;
+  if(Object.keys(uses).length||favs.size){save("toured",true);return}   /* people already using the app don't need it */
+  $("tour").hidden=false;tourShow(0);
+}
+
 let missT=null,missSent="";
 function noHit(){const q=$("q").value.trim().toLowerCase();clearTimeout(missT);missT=setTimeout(()=>{if(q.length>=3&&q===$("q").value.trim().toLowerCase()&&q!==missSent){missSent=q;Pilot.ev("search")}},2500)}
 function render(){
@@ -570,7 +660,8 @@ function render(){
   specUI();
   const byTitle=(a,b)=>a.title.localeCompare(b.title);
   const top=(words.length||tab==="fav")?[]:pool.filter(i=>(uses[i.id]||0)>0).sort((a,b)=>(uses[b.id]||0)-(uses[a.id]||0)||byTitle(a,b)).slice(0,5);
-  const rest=words.length?pool:pool.slice().sort(byTitle); /* search: best match first; otherwise A–Z (most-used also stay in A–Z) */
+  const rest=words.length?pool:tab==="fav"?pool.slice().sort(byTitle):grouped(pool.slice().sort(byTitle)); /* search: best match first; otherwise A–Z, audience versions on one row (most-used also stay in A–Z) */
+  fillRecent(!words.length&&tab!=="fav");
   fill("top",top,true);
   $("topHead").hidden=!top.length;
   $("allHead").hidden=!top.length||!rest.length;
@@ -593,11 +684,55 @@ function render(){
     ul.append(li);
   }
   else if(!rest.length){ul.hidden=true}
-  else rest.forEach(i=>ul.append(rowEl(i,false)));
+  else rest.forEach(i=>ul.append(i.members?groupEl(i):rowEl(i,false)));
   $("count").textContent=list.length+" leaflets";
   $("ver").textContent="Shared list updated "+fmtDate(shared.updated)+".";
 }
-function fill(id,arr,u){const e=$(id);e.innerHTML="";arr.forEach(i=>e.append(rowEl(i,u)));e.hidden=!arr.length}
+function fill(id,arr,u){const e=$(id);e.innerHTML="";arr.forEach(i=>e.append(i.members?groupEl(i):rowEl(i,u)));e.hidden=!arr.length}
+
+/* ---------- one row per condition, with a button for each audience ----------
+   Leaflets whose titles differ only by an audience in brackets, e.g. "Squint (ages 8–12)" and
+   "Squint (teens and parents)", share a row. "group" and "audience" in leaflets.json group others.
+   Only in the browsing lists: search results, Favourites and Most used show each leaflet. */
+const AUD=[["","Adult"],["for parents","Parents"],["ages 8–12","Ages 8–12"],["ages 8–12 and teens","Ages 8–12 and teens"],["teens","Teens"],["teens and parents","Teens & parents"],["easy read","Easy read"]];
+const AUD_RE=/\s*\((for parents|ages 8–12 and teens|ages 8–12|teens and parents|teens|easy read)\)\s*$/;
+function audOf(i){const mm=i.title.match(AUD_RE);return mm?mm[1]:""}
+function grouped(list){
+  const by=new Map();
+  list.forEach(i=>{const k=(i.group||i.title.replace(AUD_RE,""))+"|"+i.kind;if(!by.has(k))by.set(k,[]);by.get(k).push(i)});
+  const out=[],done=new Set();
+  list.forEach(i=>{
+    const k=(i.group||i.title.replace(AUD_RE,""))+"|"+i.kind,g=by.get(k);
+    if(g.length<2){out.push(i);return}
+    if(done.has(k))return;done.add(k);
+    const rank=x=>x.audience?AUD.findIndex(a=>a[1]===x.audience):AUD.findIndex(a=>a[0]===audOf(x));
+    const members=g.slice().sort((a,b)=>rank(a)-rank(b));
+    const easy=members.some(x=>audOf(x)==="easy read");
+    out.push({title:i.group||i.title.replace(AUD_RE,""),members,labels:members.map(x=>x.audience||(audOf(x)?AUD.find(a=>a[0]===audOf(x))[1]:(easy?"Standard":"Adult")))});
+  });
+  return out.sort((a,b)=>a.title.localeCompare(b.title));
+}
+function groupEl(g){
+  const first=g.members[0],li=el("li","grp"),b=el("button","row");
+  const left=el("div");left.style.minWidth="0";
+  left.append(el("div","t",g.title));
+  const m=el("div","m"),mk=g.members.map(x=>marks[x.id]).find(Boolean);
+  if(mk)m.append(el("span","badge"+(mk.k==="upd"?" upd":""),mk.k==="upd"?"Updated":"New"));
+  m.append(el("span","tag",first.tag||"Other"));
+  m.append(el("span",null,g.members.length+" versions"));
+  left.append(m);
+  const aud=el("div","aud");
+  g.members.forEach((x,k)=>{const a=el("button","audbtn",g.labels[k]);if(favs.has(x.id))a.classList.add("fav");
+    a.setAttribute("aria-label",`Show code: ${x.title}`);a.onclick=()=>openCard(x);aud.append(a)});
+  b.append(left);
+  const right=el("div");right.style.cssText="display:flex;align-items:center;gap:6px";right.insertAdjacentHTML("beforeend",qrIcon);b.append(right);
+  b.setAttribute("aria-label",`${g.title}: ${g.members.length} versions. Opens ${first.title}`);
+  b.onclick=()=>openCard(first);
+  li.append(b);
+  const sp=el("span","starsp");sp.setAttribute("aria-hidden","true");li.append(sp);
+  li.append(aud);
+  return li;
+}
 function fmtDate(s){s=String(s||"").slice(0,10);const d=new Date(s+"T12:00:00");return isNaN(d)?s:d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}
 
 /* ---------- subspecialty panel (choose one or more) ---------- */
@@ -665,7 +800,7 @@ function showCard(i,count=true){
     b.setAttribute("aria-label","Go back to "+prev.title);b.onclick=()=>{trail.pop();showCard(prev,false);$("show").scrollTop=0};box.append(b)}
   $("sRel").hidden=!(rel.length||prev);
   cardFav();
-  if(count){uses[i.id]=(uses[i.id]||0)+1;save("uses",uses);Pilot.ev("code",i.id)}
+  if(count){uses[i.id]=(uses[i.id]||0)+1;save("uses",uses);addRecent(i.id);Pilot.ev("code",i.id)}
 }
 function cardFav(){if(current)$("sFav").textContent=favs.has(current.id)?"★ Favourite":"☆ Favourite"}
 function hideCard(){$("show").hidden=true;try{wake?.release()}catch(e){}wake=null;current=null;trail=[];render()}
@@ -846,7 +981,7 @@ if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostnam
   $("updBar").onclick=()=>location.reload();
 }
 
-render();feedbackLinks();trackOpen();refresh();
+render();navFade();feedbackLinks();maybeTour();trackOpen();refresh();
 </script>
 </body>
 </html>

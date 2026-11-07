@@ -263,6 +263,8 @@
   {
    "id": "m-botulinum-toxin-for-squint",
    "title": "Botulinum toxin for squint",
+   "group": "Botulinum toxin for squint",
+   "audience": "Adult",
    "url": "https://moorfields.nhs.uk/mediaLocal/cclk5e0e/botulinum-toxin-treatment-for-squint.pdf",
    "source": "Moorfields",
    "tag": "Strabismus & neuro",
@@ -271,6 +273,8 @@
   {
    "id": "m-botulinum-toxin-for-squint-in-children-for-parents",
    "title": "Botulinum toxin for squint in children (for parents)",
+   "group": "Botulinum toxin for squint",
+   "audience": "Parents",
    "url": "https://moorfields.nhs.uk/mediaLocal/zelhgxr0/botulinum-toxin-treatment-for-squint-in-children-for-parents.pdf",
    "source": "Moorfields",
    "tag": "Strabismus & neuro",
@@ -706,6 +710,8 @@
   {
    "id": "m-droopy-eyelid-ptosis-in-children",
    "title": "Droopy eyelid (ptosis) in children",
+   "group": "Ptosis (droopy eyelid)",
+   "audience": "Children",
    "url": "https://moorfields.nhs.uk/mediaLocal/dl2fabim/droopy-eyelid-ptosis-in-children_0.pdf",
    "source": "Moorfields",
    "tag": "Oculoplastics",
@@ -1028,6 +1034,8 @@
   {
    "id": "m-microphthalmia-8-12",
    "title": "Microphthalmia (ages 8–12)",
+   "group": "Microphthalmia",
+   "audience": "Ages 8–12",
    "url": "https://moorfields.nhs.uk/mediaLocal/nlmp4a2r/microphthalmia-8-12.pdf",
    "source": "Moorfields",
    "tag": "Other",
@@ -1037,6 +1045,8 @@
   {
    "id": "m-microphthalmia-anophthalmia-teens-parents",
    "title": "Microphthalmia / anophthalmia (teens and parents)",
+   "group": "Microphthalmia",
+   "audience": "Teens & parents",
    "url": "https://moorfields.nhs.uk/mediaLocal/5m5dkz2o/microphthalmia-anophthalmia-teens-plus-parents.pdf",
    "source": "Moorfields",
    "tag": "Other",
@@ -1197,6 +1207,8 @@
   {
    "id": "m-ptosis",
    "title": "Ptosis",
+   "group": "Ptosis (droopy eyelid)",
+   "audience": "Adult",
    "url": "https://moorfields.nhs.uk/mediaLocal/mt0lcdks/ptosis.pdf",
    "source": "Moorfields",
    "tag": "Oculoplastics",
@@ -1319,6 +1331,8 @@
   {
    "id": "m-surgery-for-squint-strabismus-for-parents",
    "title": "Squint surgery (for parents)",
+   "group": "Squint surgery",
+   "audience": "Parents",
    "url": "https://moorfields.nhs.uk/mediaLocal/vbqjieou/surgery-for-squint-strabismus-for-parents.pdf",
    "source": "Moorfields",
    "tag": "Strabismus & neuro",
@@ -1328,6 +1342,8 @@
   {
    "id": "m-squint-surgery-in-adults",
    "title": "Squint surgery in adults",
+   "group": "Squint surgery",
+   "audience": "Adult",
    "url": "https://moorfields.nhs.uk/mediaLocal/3lmnp34n/squint-surgery-in-adults.pdf",
    "source": "Moorfields",
    "tag": "Strabismus & neuro",

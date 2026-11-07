@@ -87,6 +87,16 @@ Edit `leaflets.json` on GitHub (click the file, then the pencil icon). Each leaf
 - `tag`: one of the subspecialties listed at the top of the app's filter.
 - Change `"updated"` at the top of the file to the current date and time, e.g. `"2026-11-02T09:00"`.
 
+### Versions for different audiences
+
+Leaflets whose titles differ only by an audience in brackets, such as *Squint (ages 8–12)* and *Squint (teens and parents)*, share one row in the A–Z list, with a button for each version. Recognised audiences: (for parents), (ages 8–12), (ages 8–12 and teens), (teens), (teens and parents), (easy read). To group leaflets whose titles differ in other ways, give each the same `"group"` and its own `"audience"` label:
+
+```json
+{"id":"m-squint-surgery-in-adults", "title":"Squint surgery in adults", "group":"Squint surgery", "audience":"Adult", ...}
+```
+
+Search results, Favourites, Recent and Most used always show each version on its own.
+
 ### Related leaflets
 
 When a leaflet is opened, its related leaflets appear under **Also consider** as a reminder, one tap each. They're set in `"related"` at the bottom of `leaflets.json`, from a leaflet's `id` to the ones to suggest with it:
