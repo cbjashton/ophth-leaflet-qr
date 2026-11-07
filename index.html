@@ -2742,21 +2742,104 @@ function rowEl(i,showUses){
   s.innerHTML=starIcon;s.onclick=()=>toggleFav(i.id);li.append(s);
   return li;
 }
+/* ---------- search: best match first ----------
+   Each word typed must match the leaflet (title, subspecialty, or clinic shorthand below).
+   Ranking: title starts with it > a word in the title starts with it > anywhere in the title >
+   shorthand > subspecialty; whole phrase at the start of the title scores most; then shorter titles,
+   favourites, most used, A–Z. Hyphens, apostrophes and accents are ignored. If a word matches
+   nothing at all, small typos are forgiven (e.g. "keratoconous"). */
+const normText=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/['’]/g,"").replace(/[^a-z0-9]+/g," ").trim();
+const SHORTHAND={ /* typed word -> phrases to look for in titles ("|" = or; every word of a phrase must be there) */
+  kc:"keratoconus",cxl:"cross linking",crosslinking:"cross linking",xlink:"cross linking",
+  graft:"transplant|keratoplasty|keratoprosthesis",dmek:"endothelial",dsaek:"endothelial",pk:"penetrating",ek:"endothelial",kpro:"keratoprosthesis",
+  ulcer:"keratitis",mk:"microbial keratitis",fb:"foreign body",rce:"recurrent corneal erosion",
+  squint:"squint|strabismus|esotropia",strabismus:"squint|strabismus",lazy:"amblyopia",
+  amd:"macular degeneration",armd:"macular degeneration",wet:"anti vegf|aflibercept|ranibizumab",injection:"injection|intravitreal",injections:"injection|intravitreal",
+  eylea:"aflibercept",lucentis:"ranibizumab",dmo:"diabetic macular oedema",dme:"diabetic macular oedema",
+  rd:"retinal detachment",rvo:"vein occlusion",crvo:"vein occlusion",brvo:"vein occlusion",
+  pdr:"proliferative diabetic",csr:"serous chorioretinopathy",cscr:"serous chorioretinopathy",
+  iritis:"iritis|uveitis",uveitis:"uveitis|iritis",droopy:"droopy|ptosis",ptosis:"ptosis|droopy",
+  ga:"general anaesthetic|ga",la:"local anaesthetic|la",anesthetic:"anaesthetic",anesthesia:"anaesthesia|anaesthetic",
+  pco:"posterior capsule",slt:"trabeculoplasty",lpi:"iridotomy",pi:"iridotomy",
+  shortsighted:"myopia",shortsight:"myopia",longsighted:"long sight",hypermetropia:"long sight",longsight:"long sight",
+  glasses:"prescriptions|long sight|myopia|astigmatism",specs:"prescriptions",
+  ted:"thyroid",graves:"thyroid",botox:"botulinum",
+  watery:"watery|tear",tearing:"tear|watery",stye:"stye|chalazion",chalazion:"chalazion|stye",
+  vkc:"vernal",akc:"atopic",eyedrops:"drops|drop",kids:"children|child|parents",paeds:"children|child|parents",
+  dvla:"dvla|driving",driving:"driving|dvla"};
+const OPTIONAL=new Set(["eye","eyes","the","a","an","of","for","and","my","your","in","on","to","with","after","before","leaflet","leaflets","info","information"]);
+function osa(a,b){ /* optimal string alignment distance */
+  const d=[];for(let i=0;i<=a.length;i++){d[i]=[i];for(let j=1;j<=b.length;j++)d[i][j]=i?0:j}
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){
+    const c=a[i-1]===b[j-1]?0:1;
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);
+    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
+  }
+  return d[a.length][b.length];
+}
+function near(w,tw){ /* is w a small typo of tw, or of the start of tw? */
+  if(w.length<5)return false;
+  const lim=w.length>=8?2:1;
+  return [tw,tw.slice(0,w.length),tw.slice(0,w.length+1),tw.slice(0,w.length-1)].some(x=>x.length>=4&&osa(w,x)<=lim);
+}
+const searchIdx=new WeakMap();
+function idx(i){
+  let x=searchIdx.get(i);
+  if(!x){const t=normText(i.title);x={t,tw:t.split(" "),g:normText(groupsOf(i).join(" "))};searchIdx.set(i,x)}
+  return x;
+}
+function wordScore(w,x){
+  let s=0;
+  if(x.t.startsWith(w))s=100;
+  else if(x.tw.some(t=>t.startsWith(w)))s=80;
+  else if(w.length>=3&&x.t.includes(w))s=55;
+  const syn=SHORTHAND[w];
+  if(syn&&s<80&&syn.split("|").some(ph=>ph.split(" ").every(v=>x.tw.some(t=>t.startsWith(v)))))s=Math.max(s,70);
+  if(!s&&x.g.split(" ").some(t=>t.startsWith(w)))s=30;
+  return s;
+}
+function search(list,q){
+  const words=normText(q).split(" ").filter(Boolean);
+  if(!words.length)return list;
+  const phrase=words.join(" ");
+  /* words that match nothing anywhere get typo tolerance */
+  const loose=new Set(words.filter(w=>!OPTIONAL.has(w)&&!list.some(i=>wordScore(w,idx(i))>0)));
+  const out=[];
+  for(const i of list){
+    const x=idx(i);let total=0,ok=true;
+    for(const w of words){
+      let s=wordScore(w,x);
+      if(!s&&loose.has(w)&&x.tw.some(t=>near(w,t)))s=25;
+      if(!s&&OPTIONAL.has(w)&&words.some(v=>!OPTIONAL.has(v)))continue;   /* "lazy eye": "eye" need not be in the title */
+      if(!s){ok=false;break}
+      total+=s;
+    }
+    if(!ok)continue;
+    if(x.t===phrase)total+=200;
+    else if(x.t.startsWith(phrase))total+=60;
+    else if(words.length>1&&x.t.includes(phrase))total+=30;
+    total-=x.t.length*0.15;                 /* "Keratoconus" before "Keratoconus stable monitoring clinic" */
+    if(favs.has(i.id))total+=4;
+    total+=Math.min(uses[i.id]||0,20)*0.3;
+    out.push([total,i]);
+  }
+  return out.sort((a,b)=>b[0]-a[0]||a[1].title.localeCompare(b[1].title)).map(p=>p[1]);
+}
+
 let missT=null,missSent="";
 function noHit(){const q=$("q").value.trim().toLowerCase();clearTimeout(missT);missT=setTimeout(()=>{if(q.length>=3&&q===$("q").value.trim().toLowerCase()&&q!==missSent){missSent=q;Pilot.ev("search")}},2500)}
 function render(){
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.k===tab));
   const list=all(), q=$("q").value.trim().toLowerCase();
-  const words=q.split(/\s+/).filter(Boolean);
+  const words=normText(q).split(" ").filter(Boolean);
   const inTab=i=>tab==="fav"?favs.has(i.id):(tab==="all"||i.kind===tab);
   tabPool=list.filter(inTab);
-  const pool=words.length
-    ?list.filter(i=>words.every(w=>(i.title+" "+(i.tag||"")).toLowerCase().includes(w)))
-    :tabPool.filter(inSpecs);
+  const ranked=words.length?search(list,q):null;
+  const pool=words.length?ranked:tabPool.filter(inSpecs);
   specUI();
   const byTitle=(a,b)=>a.title.localeCompare(b.title);
   const top=(words.length||tab==="fav")?[]:pool.filter(i=>(uses[i.id]||0)>0).sort((a,b)=>(uses[b.id]||0)-(uses[a.id]||0)||byTitle(a,b)).slice(0,5);
-  const rest=pool.slice().sort(byTitle); /* most-used leaflets also stay in A–Z */
+  const rest=words.length?pool:pool.slice().sort(byTitle); /* search: best match first; otherwise A–Z (most-used also stay in A–Z) */
   fill("top",top,true);
   $("topHead").hidden=!top.length;
   $("allHead").hidden=!top.length||!rest.length;

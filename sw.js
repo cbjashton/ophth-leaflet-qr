@@ -4,7 +4,7 @@
 // reads or deletes caches whose name starts with PREFIX. Other apps (e.g. GOSH Eye
 // Leaflets) must use a prefix that does NOT start with "leaflet-qr-".
 const PREFIX = "leaflet-qr-";
-const VERSION = PREFIX + "v31";
+const VERSION = PREFIX + "v32";
 const FILES = ["./", "index.html", "pilot.js", "leaflets.json", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png", "pdfjs/pdfjs-5.min.js", "pdfjs/pdfjs-5.worker.min.js"];
 const SCOPE = new URL("./", self.location).pathname;   // "/ophth-leaflet-qr/"
 
