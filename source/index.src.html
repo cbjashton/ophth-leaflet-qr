@@ -139,15 +139,34 @@ header{align-items:flex-start}
 ul{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 li{display:flex;align-items:stretch}
 li+li{border-top:1px solid var(--line)}
+/* A–Z sections */
+ul.az{background:none;border:0;border-radius:0;overflow:visible}
+ul.az li:not(.lh){background:var(--surface)}
+ul.az li.lh{display:block;border:0;font:700 1.15rem var(--sans);color:var(--muted);padding:16px 6px 6px;scroll-margin-top:12px}
+ul.az li.lh:first-child{padding-top:2px}
+ul.az li.lh+li{border-top:0}
+ul.az li.first{border-radius:12px 12px 0 0;border-top:1px solid var(--line)}
+ul.az li.last{border-radius:0 0 12px 12px}
+ul.az li.first.last{border-radius:12px}
+ul.az li:not(.lh){border-left:1px solid var(--line);border-right:1px solid var(--line)}
+ul.az li.last{border-bottom:1px solid var(--line)}
+.azidx{position:fixed;right:max(2px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;padding:4px 0;touch-action:none;user-select:none;-webkit-user-select:none}
+.azidx[hidden]{display:none}
+.azidx button{border:0;background:none;color:var(--accent);font:700 .74rem/1 var(--sans);width:22px;height:clamp(14px,2.6vh,20px);padding:0;cursor:pointer;border-radius:6px}
+.azidx button.on{background:var(--accent);color:var(--surface)}
+body.hasidx #list{margin-right:12px}
 .row{flex:1;min-width:0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;text-align:left;background:none;border:0;padding:13px 4px 13px 14px;cursor:pointer}
 .row:active{background:var(--accent-soft)}
 .row .t{font-weight:700;font-size:1.02rem;min-width:0;overflow-wrap:anywhere}
 li.grp{flex-wrap:wrap}
 li.grp .row{padding-bottom:6px}
 .aud{display:flex;flex-wrap:wrap;gap:6px;flex-basis:100%;padding:0 14px 13px}
-.audbtn{border:1px solid var(--accent);color:var(--accent);background:var(--surface);border-radius:99px;padding:6px 12px;font:700 .82rem var(--sans);cursor:pointer;min-height:32px}
-.audbtn:active{background:var(--accent-soft)}
-.audbtn.fav::after{content:" ★";color:var(--star)}
+.audpill{display:inline-flex;align-items:stretch;border:1px solid var(--accent);border-radius:99px;background:var(--surface);overflow:hidden}
+.audbtn{border:0;color:var(--accent);background:none;padding:6px 6px 6px 12px;font:700 .82rem var(--sans);cursor:pointer;min-height:34px}
+.audstar{border:0;background:none;color:var(--muted);padding:0 10px 0 4px;cursor:pointer;display:grid;place-items:center;min-width:32px}
+.audstar svg{width:17px;height:17px}
+.audstar[aria-pressed="true"]{color:var(--star)}
+.audbtn:active,.audstar:active{background:var(--accent-soft)}
 .starsp{flex:none;width:48px}
 .row .m{display:flex;gap:6px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.8rem;margin-top:3px}
 .tag{font:700 .64rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:2px 6px;border-radius:4px}
@@ -283,6 +302,7 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   <ul id="top" hidden></ul>
   <div class="sec" id="allHead" hidden>A–Z</div>
   <ul id="list"></ul>
+  <nav class="azidx" id="azIdx" aria-label="Jump to letter" hidden></nav>
   <div class="foot">
     <span>Press and hold a leaflet to preview its front page.</span>
     <span id="ver"></span>
@@ -637,6 +657,29 @@ function maybeTour(){
   $("tour").hidden=false;tourShow(0);
 }
 
+/* ---------- A–Z: letter headings and the letter index down the side ---------- */
+function letterOf(t){const c=normText(t).charAt(0).toUpperCase();return /[A-Z]/.test(c)?c:"#"}
+function fillIndex(on){
+  const nav=$("azIdx");nav.innerHTML="";
+  const hs=on?[...document.querySelectorAll("#list > li.lh")]:[];
+  hs.forEach(h=>{const b=el("button",null,h.textContent);b.type="button";b.dataset.l=h.textContent;b.setAttribute("aria-label","Jump to "+h.textContent);nav.append(b)});
+  nav.dataset.has=hs.length?"1":"";document.body.classList.toggle("hasidx",!!hs.length);idxVis();
+}
+/* show the letter index only while the A–Z list fills the screen */
+function idxVis(){const nav=$("azIdx"),r=$("list").getBoundingClientRect();
+  nav.hidden=!(nav.dataset.has&&r.top<innerHeight*0.45&&r.bottom>innerHeight*0.55)}
+addEventListener("scroll",idxVis,{passive:true});addEventListener("resize",idxVis);
+function jumpTo(L){const h=$("az-"+L);if(!h)return;h.scrollIntoView({block:"start"});
+  const b=$("azIdx").querySelector(`[data-l="${L}"]`);if(b){$("azIdx").querySelectorAll(".on").forEach(x=>x.classList.remove("on"));b.classList.add("on")}}
+(()=>{const nav=$("azIdx");let down=false;
+  const at=e=>{const t=document.elementFromPoint(e.clientX,e.clientY);if(t&&t.dataset&&t.dataset.l)jumpTo(t.dataset.l)};
+  nav.addEventListener("pointerdown",e=>{down=true;nav.setPointerCapture(e.pointerId);at(e);e.preventDefault()});
+  nav.addEventListener("pointermove",e=>{if(down)at(e)});
+  const up=()=>{down=false;setTimeout(()=>nav.querySelectorAll(".on").forEach(x=>x.classList.remove("on")),600)};
+  nav.addEventListener("pointerup",up);nav.addEventListener("pointercancel",up);
+  nav.addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(b&&e.detail===0)jumpTo(b.dataset.l)});   /* keyboard */
+})();
+
 let missT=null,missSent="";
 function noHit(){const q=$("q").value.trim().toLowerCase();clearTimeout(missT);missT=setTimeout(()=>{if(q.length>=3&&q===$("q").value.trim().toLowerCase()&&q!==missSent){missSent=q;Pilot.ev("search")}},2500)}
 function render(){
@@ -656,7 +699,7 @@ function render(){
   fillRecent(!words.length&&tab!=="fav");
   fill("top",top,true);
   $("topHead").hidden=!top.length;
-  $("allHead").hidden=!top.length||!rest.length;
+  $("allHead").hidden=!top.length||!rest.length||(!words.length&&rest.length>12); /* the letters head the A–Z list */
   $("allHead").textContent=words.length?"Results":"A–Z";
   const ul=$("list");ul.innerHTML="";ul.hidden=false;
   if(!pool.length){
@@ -676,7 +719,17 @@ function render(){
     ul.append(li);
   }
   else if(!rest.length){ul.hidden=true}
-  else rest.forEach(i=>ul.append(i.members?groupEl(i):rowEl(i,false)));
+  else{
+    /* browsing a long list: split it by first letter, with a letter index down the side */
+    const az=!words.length&&rest.length>12;let cur="",sec=[];
+    const close=()=>{if(sec.length){sec[0].classList.add("first");sec.at(-1).classList.add("last")}sec=[]};
+    rest.forEach(i=>{
+      if(az){const L=letterOf(i.title);if(L!==cur){close();cur=L;const h=el("li","lh",L);h.id="az-"+L;h.setAttribute("role","presentation");ul.append(h)}}
+      const r=i.members?groupEl(i):rowEl(i,false);ul.append(r);sec.push(r);
+    });
+    close();ul.classList.toggle("az",az);fillIndex(az);
+  }
+  if(ul.hidden||!rest.length)fillIndex(false);
   $("count").textContent=list.length+" leaflets";
   $("ver").textContent="Shared list updated "+fmtDate(shared.updated)+".";
 }
@@ -714,8 +767,14 @@ function groupEl(g){
   m.append(el("span",null,g.members.length+" versions"));
   left.append(m);
   const aud=el("div","aud");
-  g.members.forEach((x,k)=>{const a=el("button","audbtn",g.labels[k]);if(favs.has(x.id))a.classList.add("fav");
-    a.setAttribute("aria-label",`Show code: ${x.title}`);a.onclick=()=>openCard(x);aud.append(a)});
+  g.members.forEach((x,k)=>{
+    const pill=el("span","audpill"),a=el("button","audbtn",g.labels[k]);
+    a.setAttribute("aria-label",`Show code: ${x.title}`);a.onclick=()=>openCard(x);
+    const s=el("button","audstar");s.type="button";const on=favs.has(x.id);
+    s.setAttribute("aria-pressed",on);s.setAttribute("aria-label",(on?"Remove from":"Add to")+" favourites: "+x.title);
+    s.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" fill="'+(on?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+    s.onclick=()=>toggleFav(x.id);
+    pill.append(a,s);aud.append(pill)});
   b.append(left);
   const right=el("div");right.style.cssText="display:flex;align-items:center;gap:6px";right.insertAdjacentHTML("beforeend",qrIcon);b.append(right);
   b.setAttribute("aria-label",`${g.title}: ${g.members.length} versions. Opens ${first.title}`);
