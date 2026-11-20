@@ -113,6 +113,15 @@ Links work one way, so add a line for each leaflet that should show suggestions.
 
 Edit `source/index.src.html`, then run `python3 source/build.py path/to/qrcode.js` to rebuild `index.html` in the main folder. The QR library is `qrcode-generator` 1.4.4 from npm. Upload the new `index.html` and bump `VERSION` in `sw.js`. Staff then see *A new version of the app is ready. Tap to update.* the next time they open it.
 
+## Testing
+
+`tests/app_test.py` runs about 40 checks in a headless phone-sized browser: every QR code decodes to its leaflet's address, the A–Z letters and side index, stars on each version, search, tabs and filters, Recent, text size, welcome cards, dark mode, offline start-up and that the pilot sends nothing while switched off.
+
+```
+pip install playwright zxing-cpp opencv-python-headless && playwright install chromium
+python3 tests/app_test.py
+```
+
 ## Before rolling out to all staff
 
 - Check with your patient information team that these are the leaflets they want used, and with IT or information governance about hosting. The app holds no patient data.

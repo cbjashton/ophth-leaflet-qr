@@ -139,17 +139,9 @@ header{align-items:flex-start}
 ul{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 li{display:flex;align-items:stretch}
 li+li{border-top:1px solid var(--line)}
-/* A–Z sections */
-ul.az{background:none;border:0;border-radius:0;overflow:visible}
-ul.az li:not(.lh){background:var(--surface)}
-ul.az li.lh{display:block;border:0;font:700 1.15rem var(--sans);color:var(--muted);padding:16px 6px 6px;scroll-margin-top:12px}
-ul.az li.lh:first-child{padding-top:2px}
-ul.az li.lh+li{border-top:0}
-ul.az li.first{border-radius:12px 12px 0 0;border-top:1px solid var(--line)}
-ul.az li.last{border-radius:0 0 12px 12px}
-ul.az li.first.last{border-radius:12px}
-ul.az li:not(.lh){border-left:1px solid var(--line);border-right:1px solid var(--line)}
-ul.az li.last{border-bottom:1px solid var(--line)}
+/* A–Z letter headings */
+ul.az li.lh{display:block;font:700 1.15rem var(--sans);color:var(--muted);padding:14px 6px 0;scroll-margin-top:12px}
+ul.az li.lh:first-child{padding-top:0}
 .azidx{position:fixed;right:max(2px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;padding:4px 0;touch-action:none;user-select:none;-webkit-user-select:none}
 .azidx[hidden]{display:none}
 .azidx button{border:0;background:none;color:var(--accent);font:700 .74rem/1 var(--sans);width:22px;height:clamp(14px,2.6vh,20px);padding:0;cursor:pointer;border-radius:6px}
@@ -269,6 +261,20 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
 .psheet .pbar a{margin-right:auto;color:var(--accent);font-weight:700;font-size:.9rem}
 .psheet button.b2[disabled]{opacity:.45;cursor:default}
 .foot a.plink{color:var(--accent);font-weight:700;text-decoration:none}
+
+/* ---------- softer look: each leaflet its own rounded card, soft shadows instead of outlines ---------- */
+:root{--shadow:0 1px 2px rgba(20,40,60,.06),0 2px 10px rgba(20,40,60,.05)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--shadow:0 1px 2px rgba(0,0,0,.35)}}
+.search,.specbtn,.tab{border-radius:14px;border-color:transparent;box-shadow:var(--shadow)}
+.tab[aria-selected="true"]{box-shadow:0 2px 8px rgba(31,95,139,.25)}
+.search{padding-left:42px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6b77' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M16.5 16.5L21 21'/%3E%3C/svg%3E") no-repeat 14px 50%/18px}
+.tag{border-radius:6px}
+.chip{border-color:transparent;box-shadow:var(--shadow)}
+#list,#top{background:none;border:0;border-radius:0;overflow:visible;display:flex;flex-direction:column;gap:10px}
+#list>li:not(.lh),#top>li{background:var(--surface);border:0;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+#list>li+li,#top>li+li{border-top:0}
+.row{padding:16px 4px 16px 18px}
+.aud{padding:0 16px 14px}
 </style>
 </head>
 <body>
@@ -667,7 +673,7 @@ function fillIndex(on){
 }
 /* show the letter index only while the A–Z list fills the screen */
 function idxVis(){const nav=$("azIdx"),r=$("list").getBoundingClientRect();
-  nav.hidden=!(nav.dataset.has&&r.top<innerHeight*0.45&&r.bottom>innerHeight*0.55)}
+  nav.hidden=!(nav.dataset.has&&r.top<120&&r.bottom>innerHeight*0.6)}   /* only once the list reaches the top, so it never covers the tabs */
 addEventListener("scroll",idxVis,{passive:true});addEventListener("resize",idxVis);
 function jumpTo(L){const h=$("az-"+L);if(!h)return;h.scrollIntoView({block:"start"});
   const b=$("azIdx").querySelector(`[data-l="${L}"]`);if(b){$("azIdx").querySelectorAll(".on").forEach(x=>x.classList.remove("on"));b.classList.add("on")}}
