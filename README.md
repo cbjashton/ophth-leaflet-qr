@@ -2,7 +2,7 @@
 
 A phone app for eye clinic staff. Tap a condition or procedure and it shows a QR code; the patient scans it with their phone camera to open the patient information leaflet. 
 
-- 183 leaflets from Moorfields Eye Hospital (public pages, as of 9 October 2026)
+- 182 leaflets from Moorfields Eye Hospital (public pages, as of 9 October 2026)
 - Works offline once installed. The patient's phone still needs signal or Wi-Fi to open the leaflet.
 - Favourites and most-used leaflets are saved on each phone. Only the developer can add or change leaflets.
 - No accounts, no patient data.

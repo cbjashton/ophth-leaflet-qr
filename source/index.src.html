@@ -70,10 +70,7 @@ header{align-items:flex-start}
 .banner.upd{border:0;width:100%;text-align:left;font:700 .92rem var(--sans);background:var(--accent);color:var(--surface);cursor:pointer;padding:12px 14px}
 .banner.info{background:var(--accent-soft);color:var(--accent);font-weight:700}
 .search{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-.navrow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
-.navrow::-webkit-scrollbar{display:none}
-.navrow.atend{-webkit-mask-image:none;mask-image:none}
-.tabs{display:flex;gap:6px;flex:none}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .tab{min-width:0;font-weight:700;font-size:.86rem;line-height:1.2;padding:10px 4px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center}
 .tab svg{width:15px;height:15px;flex:none}
 
@@ -94,8 +91,7 @@ header{align-items:flex-start}
 .tbtns{display:flex;justify-content:space-between;align-items:center}
 .tskip{background:none;border:0;color:var(--muted);font:700 1rem var(--sans);padding:10px 4px;cursor:pointer}
 .tnext{background:var(--accent);color:var(--surface);border:0;border-radius:12px;padding:11px 22px;font:800 1rem var(--sans);cursor:pointer}
-.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding:0 16px 2px}
-.chips::-webkit-scrollbar{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;overflow:hidden}
 .chip{flex:none;display:flex;align-items:center;gap:6px;max-width:15rem;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:8px 12px;font:700 .86rem var(--sans);color:var(--fg);cursor:pointer}
 .chip span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chip svg{width:16px;height:16px;flex:none;color:var(--accent)}
@@ -103,11 +99,8 @@ header{align-items:flex-start}
 .specbtn svg{width:18px;height:18px;flex:none;color:var(--muted)}
 .specbtn.on{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 .specbtn.on svg{color:var(--surface)}
-.navrow .tab{flex:none;padding:8px 13px;border-radius:99px;white-space:nowrap}
-.navrow .filters{flex:none;gap:4px}
-.navrow .specbtn{flex:none;max-width:62vw;padding:8px 12px;font-size:.86rem;border-radius:99px}
-.navrow .specbtn svg{width:15px;height:15px}
-.navrow .specclear{border-radius:99px}
+@media (max-width:359px){.tab{font-size:.78rem;padding-inline:2px;gap:3px}.tab svg{width:13px;height:13px}}
+
 .specclear{flex:none;width:46px;font-weight:700;font-size:1.05rem;border:1px solid var(--accent);border-radius:10px;background:var(--surface);color:var(--accent);cursor:pointer}
 .panel{position:fixed;inset:0;z-index:25;background:rgba(10,18,24,.45);display:flex;align-items:flex-end;justify-content:center}
 .panelcard{background:var(--surface);width:100%;max-width:560px;max-height:88vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px}
@@ -273,11 +266,6 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
   <button class="banner upd" id="updBar" hidden>A new version of the app is ready. Tap to update.</button>
   <div class="banner info" id="listBar" hidden>Leaflet list updated.</div>
   <input class="search" id="q" type="search" placeholder="Search all leaflets" autocomplete="off" aria-label="Search all leaflets">
-  <div class="navrow" id="navRow">
-  <div class="filters">
-    <button class="specbtn" id="specBtn" aria-haspopup="dialog"><span id="specLabel">All subspecialties</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-    <button class="specclear" id="specClear" hidden aria-label="Clear subspecialty filter">✕</button>
-  </div>
   <div class="tabs" role="tablist" id="tabs">
     <button class="tab" role="tab" data-k="fav"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>Favourites</button>
     <button class="tab" role="tab" data-k="all">All</button>
@@ -286,6 +274,9 @@ a.b2{text-decoration:none;color:inherit;text-align:center}
     <button class="tab" role="tab" data-k="medicines">Drops &amp; lenses</button>
     <button class="tab" role="tab" data-k="visit">Tests &amp; visits</button>
   </div>
+  <div class="filters">
+    <button class="specbtn" id="specBtn" aria-haspopup="dialog"><span id="specLabel">All subspecialties</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <button class="specclear" id="specClear" hidden aria-label="Clear subspecialty filter">✕</button>
   </div>
   <div class="recent" id="recentWrap" hidden><div class="sec">Recent</div><div class="chips" id="recent"></div></div>
   <div class="sec" id="topHead" hidden>Most used</div>
@@ -612,9 +603,6 @@ document.querySelectorAll("#aaSeg button").forEach(b=>b.onclick=()=>{setSize(b.d
 document.addEventListener("click",e=>{if(!$("aaPop").hidden&&!$("aaPop").contains(e.target))aaClose()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("aaPop").hidden){aaClose();$("aaBtn").focus()}});
 
-/* the one-row tabs fade at the right edge until scrolled to the end */
-function navFade(){const n=$("navRow");n.classList.toggle("atend",n.scrollLeft+n.clientWidth>=n.scrollWidth-4)}
-$("navRow").addEventListener("scroll",navFade,{passive:true});addEventListener("resize",navFade);
 
 /* ---------- recent: the last leaflets shown on this phone ---------- */
 let recent=load("recent",[]);
@@ -625,7 +613,11 @@ function fillRecent(show){
   items.forEach(i=>{const b=el("button","chip");b.insertAdjacentHTML("beforeend",chipQr);b.append(el("span",null,i.title));
     b.setAttribute("aria-label","Show code for "+i.title);b.onclick=()=>openCard(i);box.append(b)});
   $("recentWrap").hidden=!items.length;
+  /* at most two lines, never off the screen: drop the chips from the first one that would start a third line */
+  if(items.length){const kids=[...box.children],tops=[...new Set(kids.map(k=>k.offsetTop))].sort((a,b)=>a-b);
+    if(tops.length>2){const cut=kids.findIndex(k=>k.offsetTop>=tops[2]);kids.slice(cut).forEach(k=>k.remove())}}
 }
+addEventListener("resize",()=>{if(!$("recentWrap").hidden)render()});
 
 /* ---------- welcome cards: shown once per phone ---------- */
 const TOUR=[
@@ -981,7 +973,7 @@ if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostnam
   $("updBar").onclick=()=>location.reload();
 }
 
-render();navFade();feedbackLinks();maybeTour();trackOpen();refresh();
+render();feedbackLinks();maybeTour();trackOpen();refresh();
 </script>
 </body>
 </html>

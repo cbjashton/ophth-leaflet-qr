@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-27T21:30",
+ "updated": "2026-11-20T18:00",
  "reportForm": "https://docs.google.com/forms/d/e/1FAIpQLSdy74oCyTdTcrciLxiLcnBZl1DAJhVLKAdyo1Hg9S5BXrzHVA/viewform",
  "statsCode": "",
  "pilot": {
@@ -157,7 +157,8 @@
    "title": "Atropine eye drops for pre-dilation",
    "url": "https://moorfields.nhs.uk/mediaLocal/zbmi0ekp/atropine-eye-drops-for-pre-dilation-before-an-appointment.pdf",
    "source": "Moorfields",
-   "tag": "Other",
+   "tag": "Paediatrics",
+   "kids": true,
    "kind": "medicines"
   },
   {
@@ -622,7 +623,8 @@
    "title": "Cyclopentolate eye drops for pre-dilation",
    "url": "https://moorfields.nhs.uk/mediaLocal/54od5cvn/cyclopentolate-eye-drops-for-pre-dilation-before-an-appointment.pdf",
    "source": "Moorfields",
-   "tag": "Other",
+   "tag": "Paediatrics",
+   "kids": true,
    "kind": "medicines"
   },
   {
@@ -749,7 +751,7 @@
    "title": "Electrophysiology in children (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/3osd5zps/electrophysiology-in-children-for-parents.pdf",
    "source": "Moorfields",
-   "tag": "Other",
+   "tag": "Paediatrics",
    "kind": "visit",
    "kids": true
   },
@@ -1038,7 +1040,7 @@
    "audience": "Ages 8–12",
    "url": "https://moorfields.nhs.uk/mediaLocal/nlmp4a2r/microphthalmia-8-12.pdf",
    "source": "Moorfields",
-   "tag": "Other",
+   "tag": "Paediatrics",
    "kind": "condition",
    "kids": true
   },
@@ -1049,7 +1051,7 @@
    "audience": "Teens & parents",
    "url": "https://moorfields.nhs.uk/mediaLocal/5m5dkz2o/microphthalmia-anophthalmia-teens-plus-parents.pdf",
    "source": "Moorfields",
-   "tag": "Other",
+   "tag": "Paediatrics",
    "kind": "condition",
    "kids": true
   },
@@ -1060,15 +1062,6 @@
    "source": "Moorfields",
    "tag": "Before & after surgery",
    "kind": "medicines"
-  },
-  {
-   "id": "m-my-hospital-passport-er",
-   "title": "My hospital passport",
-   "url": "https://www.moorfields.nhs.uk/mediaLocal/b1geaob4/my-hospital-passport-v05.pdf",
-   "source": "Moorfields",
-   "tag": "Other",
-   "kind": "visit",
-   "easy": true
   },
   {
    "id": "m-myopia",
@@ -1175,7 +1168,7 @@
    "title": "Preventing eye injuries (for parents)",
    "url": "https://moorfields.nhs.uk/mediaLocal/qwldik5d/preventing-eye-injuries-for-parents.pdf",
    "source": "Moorfields",
-   "tag": "Other",
+   "tag": "Paediatrics",
    "kind": "visit",
    "kids": true
   },
@@ -1396,7 +1389,8 @@
    "title": "The red reflex",
    "url": "https://moorfields.nhs.uk/mediaLocal/00jlf3q1/the-red-reflex_0.pdf",
    "source": "Moorfields",
-   "tag": "Other",
+   "tag": "Paediatrics",
+   "kids": true,
    "kind": "visit"
   },
   {
